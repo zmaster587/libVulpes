@@ -59,3 +59,6 @@ material.Titanium.name=Титанов.
 material.Rutile.name=Рутилов.
 material.Aluminum.name=Алюминиев.
 material.Iridium.name=Иридиев.
+
+translating.libVulpes.order.ore=%1$s %2$s
+translating.libVulpes.order.oreProduct=%1$s %2$s
