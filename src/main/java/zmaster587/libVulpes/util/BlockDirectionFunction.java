@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class BlockDirectionFunction {
 
-	byte states[] = new byte[6];
+	byte[] states = new byte[6];
 	byte maxNumStates;
 	
 	public BlockDirectionFunction(int maxStates) {

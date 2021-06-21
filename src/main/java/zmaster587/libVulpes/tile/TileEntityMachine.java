@@ -14,12 +14,14 @@ import net.minecraft.world.World;
 import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.util.UniversalBattery;
 
+import javax.annotation.Nonnull;
+
 public abstract class TileEntityMachine extends TileEntity implements ISidedInventory, ITickable,  IToggleableMachine {
 	
 	
 	protected UniversalBattery energy;
 	
-	protected ItemStack inv[];
+	protected ItemStack[] inv;
 	
 	protected int progress, totalTime;
 	
@@ -67,7 +69,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 		{
 			ItemStack stack = inv[i];
 
-			if(stack != null) {
+			if(!stack.isEmpty()) {
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setByte("Slot", (byte)(i));
 				stack.writeToNBT(tag);
@@ -88,7 +90,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 		
 		NBTTagList tagList = nbt.getTagList("Inventory", (byte)10);
 		for (int i = 0; i < tagList.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
+			NBTTagCompound tag = tagList.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < inv.length) {
 				inv[slot] = new ItemStack(tag);
@@ -105,31 +107,30 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	}
 	
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int i) {
 		return inv[i];
 	}
 	
 	public void incStackSize(int i, int amt) {
 
-		if(inv[i] == null)
-			return;
-		else if(inv[i].getCount() + amt > inv[i].getMaxStackSize())
-			inv[i].setCount(inv[i].getMaxStackSize());
-		else
-			inv[i].setCount(inv[i].getCount() + amt);
+		if(!inv[i].isEmpty()) {
+			inv[i].setCount(Math.min(inv[i].getCount() + amt, inv[i].getMaxStackSize()));
+		}
 	}
 	
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int i, int j) {
 		ItemStack ret;
-		if(inv[i] == null)
-			ret = null;
+		if(inv[i].isEmpty())
+			ret = ItemStack.EMPTY;
 		else if(inv[i].getCount() > j) {
 			ret = inv[i].splitStack(j);
 		}
 		else {
 			ret = inv[i].copy();
-			inv[i] = null;
+			inv[i] = ItemStack.EMPTY;
 		}
 		return ret;
 	}
@@ -137,7 +138,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	public abstract void onInventoryUpdate();
 	
 	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack) {
+	public void setInventorySlotContents(int i, @Nonnull ItemStack itemstack) {
 		inv[i] = itemstack;
 
 		//if(!this.worldObj.isRemote)

@@ -5,7 +5,7 @@ public class VulpineMath {
 	
 	public static double log2(double in) {return Math.log(in)/log2;}
 	
-	public static int greatestCommonFactor(int num[]) {
+	public static int greatestCommonFactor(int[] num) {
 		int largestGCF = greatestCommonFactor(num[0], num[1]);
 		
 		for(int i = 2; i < num.length; i++){

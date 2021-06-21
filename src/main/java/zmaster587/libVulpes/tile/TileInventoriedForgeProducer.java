@@ -7,6 +7,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public abstract class TileInventoriedForgeProducer extends TileEntityForgeProducer implements ISidedInventory {
 
 	protected EmbeddedInventory inventory;
@@ -25,8 +28,9 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
-		int i[] = new int[inventory.getSizeInventory()];
+	@Nonnull
+	public int[] getSlotsForFace(@Nullable EnumFacing side) {
+		int[] i = new int[inventory.getSizeInventory()];
 
 		for(int j = 0; j < i.length; j++) { i[j] = j;}
 
@@ -34,7 +38,7 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
+	public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
 		return true;
 	}
 
@@ -51,18 +55,20 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		return inventory.getStackInSlot(slot);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amt) {
 		return inventory.decrStackSize(slot, amt);
 	}
 
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
@@ -73,6 +79,7 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 	}
 
 	@Override
+	@Nullable
 	public String getName() {
 		return null;
 	}
@@ -103,18 +110,19 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn,
+	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn,
 			EnumFacing direction) {
 		return inventory.canInsertItem(index, itemStackIn, direction);
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack,
+	public boolean canExtractItem(int index, @Nonnull ItemStack stack,
 			EnumFacing direction) {
 		return inventory.canExtractItem(index, stack, direction);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		return inventory.removeStackFromSlot(index);
 	}

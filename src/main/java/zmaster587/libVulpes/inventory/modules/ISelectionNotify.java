@@ -1,9 +1,9 @@
 package zmaster587.libVulpes.inventory.modules;
 
 public interface ISelectionNotify {
-	public void onSelected(Object sender);
+	void onSelected(Object sender);
 	
-	public void onSelectionConfirmed(Object sender);
+	void onSelectionConfirmed(Object sender);
 
-	public void onSystemFocusChanged(Object sender);
+	void onSystemFocusChanged(Object sender);
 }

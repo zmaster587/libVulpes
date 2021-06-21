@@ -41,7 +41,7 @@ public class CommonProxy {
 		
 	}
 
-	public void preinit() {
+	public void preInit() {
 		// TODO Auto-generated method stub
 		
 	}

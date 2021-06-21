@@ -34,7 +34,7 @@ public class LibVulpesBlocks {
 	//public static List<Block> blockMetal = new ArrayList<Block>();
 	public static Item[] itemOreProduct;
 	//public static List<Block> blockCoil = new ArrayList<Block>();
-	public static Block motors[];
+	public static Block[] motors;
 	public static Block blockCoalGenerator;
 	public static Block blockGTPlug;
 
@@ -86,20 +86,9 @@ public class LibVulpesBlocks {
 				}
 
 				GameData.register_impl(itemBlock.setRegistryName(block.getRegistryName()));
-			} catch (InstantiationException e) {
+			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
+			} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

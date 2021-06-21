@@ -14,12 +14,12 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 public class ModuleBlockSideSelector extends ModuleBase implements IButtonInventory {
 
 	private IGuiCallback callback;
-	private ModuleButton buttons[];
+	private ModuleButton[] buttons;
 	private BlockDirectionFunction bdf;
-	private String text[];
+	private String[] text;
 
-	private static final String directions[] = {"Bottom: ", "Top: ", "North: ", "South ", "West: ", "East: "};
-	private static final int colors[] = {0x00DD00, 0xDD0000, 0x0000DD, 0xDDDD00, 0xDD00DD, 0x00DDDD};
+	private static final String[] directions = {"Bottom: ", "Top: ", "North: ", "South ", "West: ", "East: "};
+	private static final int[] colors = {0x00DD00, 0xDD0000, 0x0000DD, 0xDDDD00, 0xDD00DD, 0x00DDDD};
 
 	public ModuleBlockSideSelector(int offsetX, int offsetY, IGuiCallback callback, String ... stateNames) {
 		super(offsetX, offsetY);

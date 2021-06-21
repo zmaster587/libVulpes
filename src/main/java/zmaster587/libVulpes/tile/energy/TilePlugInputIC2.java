@@ -9,6 +9,8 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.MinecraftForge;
 import zmaster587.libVulpes.Configuration;
 
+import javax.annotation.Nullable;
+
 public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySink, 
 ITickable {
 
@@ -49,6 +51,7 @@ ITickable {
 	}
 
 	@Override
+	@Nullable
 	public String getName() {
 		return null;
 	}

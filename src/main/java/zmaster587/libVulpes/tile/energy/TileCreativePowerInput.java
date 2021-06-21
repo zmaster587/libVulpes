@@ -9,6 +9,8 @@ import net.minecraftforge.energy.IEnergyStorage;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.CreativeBattery;
 
+import javax.annotation.Nullable;
+
 public class TileCreativePowerInput extends TilePlugBase implements IPower, ITickable {
 
 	public TileCreativePowerInput() {
@@ -63,6 +65,7 @@ public class TileCreativePowerInput extends TilePlugBase implements IPower, ITic
 	}
 
 	@Override
+	@Nullable
 	public String getName() {
 		// TODO Auto-generated method stub
 		return null;
@@ -70,7 +73,7 @@ public class TileCreativePowerInput extends TilePlugBase implements IPower, ITic
 
 	@Override
 	public int receiveEnergy(int amt, boolean simulate) {
-		return receiveEnergy(amt, simulate);
+		return 0;
 	}
 
 	@Override
@@ -92,7 +95,8 @@ public class TileCreativePowerInput extends TilePlugBase implements IPower, ITic
 
 				if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
 					IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
-					this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
+					if(storage != null)
+						this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
 				}
 			}
 		}

@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.gui.GuiImageButton;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,13 +26,13 @@ public class ModuleButton extends ModuleBase {
 
 	protected int bgColor;
 	protected String text, tooltipText;
-	ResourceLocation buttonImages[];
+	ResourceLocation[] buttonImages;
 	protected boolean visible = true;
 
 	boolean enabled = true;
 	protected String sound;
 
-	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation buttonImages[]) {
+	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation[] buttonImages) {
 		super(offsetX, offsetY);
 		this.tile = tile;
 		this.buttonImages = buttonImages;
@@ -46,19 +47,19 @@ public class ModuleButton extends ModuleBase {
 		color = 0xFF22FF22; // Lime green
 	}
 
-	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation buttonImages[], String tooltipText) {
+	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation[] buttonImages, String tooltipText) {
 		this(offsetX, offsetY, buttonId, text, tile, buttonImages);
 		this.tooltipText = tooltipText;
 	}
 
 
-	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation buttonImages[], int sizeX, int sizeY) {
+	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation[] buttonImages, int sizeX, int sizeY) {
 		this(offsetX, offsetY, buttonId, text, tile, buttonImages);
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 	}
 
-	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation buttonImages[], String tooltipText, int sizeX, int sizeY) {
+	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation[] buttonImages, String tooltipText, int sizeX, int sizeY) {
 		this(offsetX, offsetY, buttonId, text, tile, buttonImages,sizeX, sizeY);
 		this.tooltipText = tooltipText;
 	}
@@ -71,7 +72,7 @@ public class ModuleButton extends ModuleBase {
 	}*/
 
 	public void setImage(ResourceLocation[] images) {
-		((GuiImageButton)button).setButtonTexture(images);
+		button.setButtonTexture(images);
 	}
 
 
@@ -149,7 +150,7 @@ public class ModuleButton extends ModuleBase {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		if(button != null)
-			this.enabled = button.enabled = enabled;
+			button.enabled = enabled;
 	}
 
 	/**
@@ -163,7 +164,7 @@ public class ModuleButton extends ModuleBase {
 	@SideOnly(Side.CLIENT)
 	public List<GuiButton> addButtons(int x, int y) {
 
-		List<GuiButton> list = new LinkedList<GuiButton>();
+		List<GuiButton> list = new LinkedList<>();
 
 		button = new GuiImageButton(buttonId, x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 
@@ -205,12 +206,7 @@ public class ModuleButton extends ModuleBase {
 		if(tooltipText != null) {
 
 			if( isMouseOver(mouseX, mouseY) ) {
-				List<String> list = new LinkedList<String>();
-				for(String str : tooltipText.split("\n")) {
-
-					list.add(str);
-
-				}
+				List<String> list = new LinkedList<>(Arrays.asList(tooltipText.split("\n")));
 				this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
 			}
 			//}

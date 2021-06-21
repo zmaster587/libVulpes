@@ -5,6 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public interface ILinkableTile {
 	
 	/**
@@ -15,7 +17,7 @@ public interface ILinkableTile {
 	 * @param world the world
 	 * @return true If link is allowed
 	 */
-	public boolean onLinkStart(ItemStack item, TileEntity entity, EntityPlayer player, World world);
+	boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world);
 	
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,EntityPlayer player, World world);
+	boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world);
 }

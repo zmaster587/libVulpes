@@ -24,10 +24,10 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 	@Override
 	public IRecipe parse(JsonContext context, JsonObject json) {
 		
-		List<List<ItemStack>> inputs = new LinkedList<List<ItemStack>>();
-		List<ChanceItemStack> outputs = new LinkedList<ChanceItemStack>();
-		List<FluidStack> inputFluids = new LinkedList<FluidStack>();
-		List<ChanceFluidStack> outputFluids = new LinkedList<ChanceFluidStack>();
+		List<List<ItemStack>> inputs = new LinkedList<>();
+		List<ChanceItemStack> outputs = new LinkedList<>();
+		List<FluidStack> inputFluids = new LinkedList<>();
+		List<ChanceFluidStack> outputFluids = new LinkedList<>();
 		int timeTaken = 0;
 		int energy = 0;
 		int maxOutput = -1;
@@ -78,7 +78,7 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 			throw new JsonParseException("Missing parameters");
 		}
 		
-		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, String>());
+		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<>());
 		
 		if(maxOutput > 0)
 			recipe.setMaxOutputSize(maxOutput);
@@ -97,7 +97,7 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 		if(!json.isJsonArray())
 			return null;
 		
-		List<ChanceFluidStack> fluidstacks= new LinkedList<ChanceFluidStack>();
+		List<ChanceFluidStack> fluidstacks= new LinkedList<>();
 				
 		JsonArray ingredientListJSON =  json.getAsJsonArray();
 		for(JsonElement ingredient : ingredientListJSON)
@@ -128,10 +128,10 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 			return null;
 		
 		JsonArray ingredientListJSON =  json.getAsJsonArray();
-		List<List<ItemStack>> inputs = new LinkedList<List<ItemStack>>();
+		List<List<ItemStack>> inputs = new LinkedList<>();
 		for(JsonElement ingredient : ingredientListJSON)
 		{
-			List<ItemStack> newList = new LinkedList<ItemStack>();
+			List<ItemStack> newList = new LinkedList<>();
 			for( ChanceItemStack stack3 : getIngredients(context, ingredient) )
 			{
 				newList.add(stack3.stack);
@@ -144,7 +144,7 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 	
 	List<ChanceItemStack> getIngredients(JsonContext context, JsonElement json)
 	{
-		List<ChanceItemStack> stacks = new LinkedList<ChanceItemStack>();
+		List<ChanceItemStack> stacks = new LinkedList<>();
 		for(ItemStack stack : CraftingHelper.getIngredient(json, context).getMatchingStacks())
 		{
 			int count = stack.getCount();
@@ -177,7 +177,7 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 		if(stacks.size() > 1)
 		{
 			ChanceItemStack stack  = stacks.get(0);
-			stacks = new LinkedList<ChanceItemStack>();
+			stacks = new LinkedList<>();
 			stacks.add(stack);
 		}
 		

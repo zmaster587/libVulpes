@@ -24,7 +24,7 @@ public class PacketMachine extends BasePacket {
 
 	public PacketMachine() {
 		nbt = new NBTTagCompound();
-	};
+	}
 
 	public PacketMachine(INetworkMachine machine, byte packetId) {
 		this();
@@ -62,7 +62,7 @@ public class PacketMachine extends BasePacket {
 
 		TileEntity ent = world.getTileEntity(new BlockPos(x, y, z));
 
-		if(ent != null && ent instanceof INetworkMachine) {
+		if(ent instanceof INetworkMachine) {
 			machine = (INetworkMachine)ent;
 			machine.readDataFromNetwork(in, packetId, nbt);
 		}
@@ -85,10 +85,10 @@ public class PacketMachine extends BasePacket {
 		BlockPos pos = new BlockPos(x,y,z);
 		Chunk chunk = world.getChunkFromBlockCoords(pos);
 
-		if(chunk != null && chunk.isLoaded()) {
+		if(chunk.isLoaded()) {
 			TileEntity ent = world.getTileEntity(pos);
 
-			if(ent != null && ent instanceof INetworkMachine) {
+			if(ent instanceof INetworkMachine) {
 				machine = (INetworkMachine)ent;
 				machine.readDataFromNetwork(in, packetId, nbt);
 			}

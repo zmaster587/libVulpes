@@ -5,6 +5,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import zmaster587.libVulpes.energy.IPower;
 
+import javax.annotation.Nonnull;
+
 public class TilePowerOutput extends TilePlugBase implements IPower, ITickable {
 
 	public TilePowerOutput() {
@@ -32,7 +34,6 @@ public class TilePowerOutput extends TilePlugBase implements IPower, ITickable {
 
 				if(tile instanceof IPower) {
 					IPower handle = (IPower)tile;
-					storage.getUniversalEnergyStored();
 					storage.extractEnergy(handle.receiveEnergy(dir.getOpposite(), storage.getUniversalEnergyStored(), false), false);
 				}
 			}
@@ -71,6 +72,7 @@ public class TilePowerOutput extends TilePlugBase implements IPower, ITickable {
 	}
 
 	@Override
+	@Nonnull
 	public String getName() {
 		return getModularInventoryName();
 	}

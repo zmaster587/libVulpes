@@ -8,21 +8,21 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.items.ItemStackHandler;
 import zmaster587.libVulpes.interfaces.IInventoryUpdateCallback;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class EmbeddedInventory extends ItemStackHandler implements ISidedInventory {
 
-	ItemStackHandler handler;
+	private ItemStackHandler handler;
 
-	IInventoryUpdateCallback tile;
+	private IInventoryUpdateCallback tile;
 
-	NonNullList<Boolean> slotInsert;
-	NonNullList<Boolean> slotExtract;
+	private NonNullList<Boolean> slotInsert;
+	private NonNullList<Boolean> slotExtract;
 
 	public EmbeddedInventory(int size) {
 		this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
@@ -54,13 +54,13 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 
 		nbt.setTag("outputItems", list);
 
-		ArrayList list2 = new ArrayList<Byte>();
+		ArrayList<Byte> list2 = new ArrayList<>();
 		for(int i = 0; i < this.slotInsert.size(); i++) {
 			list2.add(i, slotInsert.get(i) ? (byte)1 : (byte)0);
 		}
 		nbt.setTag("slotInsert", new NBTTagByteArray(list2));
 
-		ArrayList list3 = new ArrayList<Byte>();
+		ArrayList<Byte> list3 = new ArrayList<>();
 		for(int i = 0; i < this.slotExtract.size(); i++) {
 			list3.add(i, slotExtract.get(i) ? (byte)1 : (byte)0);
 		}
@@ -82,7 +82,7 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 		this.stacks = NonNullList.withSize(Math.max(nbt.getInteger("size") == 0 ? 4 : nbt.getInteger("size"), this.stacks.size()), ItemStack.EMPTY);
 		handler = new ItemStackHandler(this.stacks);
 		for (int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) list.getCompoundTagAt(i);
+			NBTTagCompound tag = list.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < this.stacks.size()) {
 				this.stacks.set(slot, new ItemStack(tag));
@@ -93,12 +93,12 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 		byte[] list2 = nbt.getByteArray("slotInsert");
 		this.slotInsert = NonNullList.withSize(list2.length, false);
 		for (int i = 0; i < list2.length; i++) {
-			this.slotInsert.set(i, (list2[i] == 1) ? true : false);
+			this.slotInsert.set(i, list2[i] == 1);
 		}
 		byte[] list3 = nbt.getByteArray("slotExtract");
 		this.slotExtract = NonNullList.withSize(list3.length, false);
 		for (int i = 0; i < list3.length; i++) {
-			this.slotExtract.set(i, (list3[i] == 1) ? true : false);
+			this.slotExtract.set(i, list3[i] == 1);
 		}
 
 		//Backcompat, to allow older worlds to load
@@ -116,6 +116,7 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		if(slot >= this.stacks.size())
 			return ItemStack.EMPTY;
@@ -124,6 +125,7 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amt) {
 		ItemStack stack = this.stacks.get(slot);
 		if(!stack.isEmpty()) {
@@ -133,11 +135,11 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 
 			return stack2;
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		this.stacks.set(slot, stack);
 	}
 
@@ -160,14 +162,14 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(@Nullable EntityPlayer player) {
 		return true;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		for(ItemStack i : this.stacks) {
-			if(i != null && !i.isEmpty())
+		for(ItemStack stack : this.stacks) {
+			if(!stack.isEmpty())
 				return false;
 		}
 		return true;
@@ -184,13 +186,14 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack item) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack item) {
 		return this.stacks.get(slot).isEmpty() || (this.stacks.get(slot).isItemEqual(item) && this.stacks.get(slot).getMaxStackSize() != this.stacks.get(slot).getCount());
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
-		int array[] = new int[this.stacks.size()];
+	@Nonnull
+	public int[] getSlotsForFace(@Nullable EnumFacing side) {
+		int[] array = new int[this.stacks.size()];
 
 		for(int i = 0; i < this.stacks.size(); i++) {
 			array[i] = i;
@@ -200,31 +203,34 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 
 
 
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, @Nullable EnumFacing direction) {
 		return this.slotInsert.get(index);
 	}
 
 
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+	public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nullable EnumFacing direction) {
 		return this.slotExtract.get(index);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-		if (!slotInsert.isEmpty() && slotInsert.get(slot) == true ){
+		if (!slotInsert.isEmpty() && slotInsert.get(slot)){
 			return super.insertItem(slot, stack, simulate);
 		}
 		return stack;
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		if (!slotExtract.isEmpty() && slotExtract.get(slot) == true ){
+		if (!slotExtract.isEmpty() && slotExtract.get(slot)){
 			return super.extractItem(slot, amount, simulate);
 		}
 		return ItemStack.EMPTY;
 	}
 
+	@Nonnull
 	public String getName() {
 		return "";
 	}
@@ -234,6 +240,7 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		ItemStack stack = this.stacks.get(index);
 		this.stacks.set(index, ItemStack.EMPTY);
@@ -261,6 +268,7 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	}
 
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
 		return new TextComponentString("Inventory");
 	}

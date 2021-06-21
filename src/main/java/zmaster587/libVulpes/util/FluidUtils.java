@@ -1,16 +1,14 @@
 package zmaster587.libVulpes.util;
 
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import zmaster587.libVulpes.event.BucketHandler;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,123 +16,73 @@ import java.util.Map;
 
 public class FluidUtils {
 	
-	private static Map<String, List<String>> fluidEquivilentMapping = new HashMap<String, List<String>>();
+	private static Map<String, List<String>> fluidEquivalentMapping = new HashMap<>();
 
-	public static boolean containsFluid(ItemStack stack) {
+	public static boolean containsFluid(@Nonnull ItemStack stack) {
 		return !stack.isEmpty() && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
 	}
 
-	public static boolean containsFluid(ItemStack stack, Fluid fluid) {
+	public static boolean containsFluid(@Nonnull ItemStack stack, Fluid fluid) {
 		if(containsFluid(stack)) {
 			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
-			FluidStack fluidStack = fluidItem.getTankProperties()[0].getContents();
-			if(fluidStack != null && areFluidsSameType(fluidStack.getFluid(), fluid))
-				return true;
+
+			if(fluidItem != null) {
+				FluidStack fluidStack = fluidItem.getTankProperties()[0].getContents();
+				return fluidStack != null && areFluidsSameType(fluidStack.getFluid(), fluid);
+			}
 		}
 
 		return false;
 	}
 
-	public static int getFluidItemCapacity(ItemStack stack) {
+	public static int getFluidItemCapacity(@Nonnull ItemStack stack) {
 		if(containsFluid(stack)) {
 			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
-			return  fluidItem.getTankProperties()[0].getCapacity();
+
+			if(fluidItem != null)
+				return  fluidItem.getTankProperties()[0].getCapacity();
 		}
 		return 0;
 	}
 
-	public static IFluidHandlerItem getFluidHandler(ItemStack stack) {
+	public static IFluidHandlerItem getFluidHandler(@Nonnull ItemStack stack) {
 		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
 	}
 
-	public static FluidStack getFluidForItem(ItemStack item) {
+	public static FluidStack getFluidForItem(@Nonnull ItemStack item) {
 		if(!containsFluid(item))
 			return null;
 		IFluidHandlerItem fluidItem = item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
-		return fluidItem.getTankProperties()[0].getContents();
+
+		return fluidItem == null ? null : fluidItem.getTankProperties()[0].getContents();
 	}
 
-	public static boolean attemptDrainContainerIInv(EmbeddedInventory inv, IFluidTank tank, ItemStack stack, int inputSlot, int outputSlot) {
-
-		if(containsFluid(stack)) {
-			
-			FluidStack fluidStack;
-			stack = stack.copy();
-			stack.setCount(1);
-			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
-
-			FluidStack itemFluidStack = getFluidForItem(stack);
-
-			//Drain the tank into the item
-			if(itemFluidStack == null && tank.getFluid() != null) {
-				int amt = 0;
-				
-				//Special case handling buckets
-				if(stack.getItem() == Items.BUCKET)
-				{
-					if(tank.getFluidAmount() > 1000)
-					{
-						Item newBucket = BucketHandler.INSTANCE.getItemFromFluid(tank.getFluid().getFluid());
-						if(newBucket != null)
-						{
-							stack = new ItemStack(newBucket);
-							amt = 1000;
-							
-						}
-					}
-				}
-				//General case
-				else
-				{
-					amt = fluidItem.fill(tank.getFluid(), true);
-					stack = fluidItem.getContainer();
-				}
-
-				//If the container is full move it down and try again for a new one
-				if(amt != 0 && getFluidItemCapacity(stack) == getFluidForItem(stack).amount) {
-
-
-					if(inv.getStackInSlot(outputSlot).isEmpty()) {
-						inv.setInventorySlotContents(outputSlot, stack);
-					}
-					else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), stack) && inv.getStackInSlot(outputSlot).getItem().equals(stack.getItem()) && inv.getStackInSlot(outputSlot).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < inv.getStackInSlot(outputSlot).getCount()) {
-						inv.getStackInSlot(outputSlot).setCount(inv.getStackInSlot(outputSlot).getCount() + 1);
-
-					}
-					else
-						return false;
-					tank.drain(amt, true);
-					inv.decrStackSize(inputSlot, 1);
-
-					return true;
-				}
-
+	//Use Forge methods to handle containers being put into inventories
+	public static boolean attemptDrainContainerIInv(EmbeddedInventory inv, IFluidHandler tank, @Nonnull ItemStack stack, int inputSlot, int outputSlot) {
+		if (containsFluid(stack)) {
+			boolean fill = false;
+			boolean toReturn = false;
+			FluidActionResult modifiedContainer = null;
+			if (!(stack.getItem() == Items.BUCKET) && (getFluidForItem(stack).amount == getFluidItemCapacity(stack) || tank.getTankProperties()[0].getContents().amount == 0)) {
+				modifiedContainer = FluidUtil.tryEmptyContainer(stack, tank, getFluidItemCapacity(stack), null, false);
+			} else {
+				modifiedContainer = FluidUtil.tryFillContainer(stack, tank, getFluidItemCapacity(stack), null, false);
+				fill = true;
 			}
-			else {
-				fluidStack = fluidItem.drain(tank.getCapacity() - tank.getFluidAmount(), false);
-
-				int amountDrained = tank.fill(fluidStack, false);
-				FluidStack fluidStack2 = fluidItem.drain(amountDrained, true);
-				
-				stack = fluidItem.getContainer();
-				
-				if (getFluidForItem(stack) == null || (fluidStack2 != null && fluidStack2.amount != 0)) {
-					if(inv.getStackInSlot(outputSlot).isEmpty()) {
-						inv.setInventorySlotContents(outputSlot, stack);
+				if (modifiedContainer.isSuccess()) {
+					if (inv.getStackInSlot(outputSlot).isEmpty()) {
+						toReturn = fill ? FluidUtil.tryFillContainer(stack, tank, getFluidItemCapacity(stack), null, true).isSuccess() : FluidUtil.tryEmptyContainer(stack, tank, getFluidItemCapacity(stack), null, true).isSuccess();
+						inv.getStackInSlot(inputSlot).shrink(1);
+						inv.setStackInSlot(outputSlot, modifiedContainer.getResult());
+					} else if ((inv.getStackInSlot(outputSlot).getItem() == modifiedContainer.getResult().getItem() && inv.getStackInSlot(outputSlot).getCount() < inv.getStackInSlot(outputSlot).getMaxStackSize())) {
+						toReturn = fill ? FluidUtil.tryFillContainer(stack, tank, getFluidItemCapacity(stack), null, true).isSuccess() : FluidUtil.tryEmptyContainer(stack, tank, getFluidItemCapacity(stack), null, true).isSuccess();
+						inv.getStackInSlot(inputSlot).shrink(1);
+						inv.getStackInSlot(outputSlot).grow(1);
+						return true;
 					}
-					else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), stack) && inv.getStackInSlot(outputSlot).getItem().equals(stack.getItem()) && inv.getStackInSlot(outputSlot).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) > inv.getStackInSlot(outputSlot).getCount()) {
-						inv.getStackInSlot(outputSlot).setCount( inv.getStackInSlot(outputSlot).getCount() + 1 );
-
-					}
-					else
-						return false;
-					tank.fill(fluidStack, true);
-					inv.decrStackSize(inputSlot, 1);
-
-					return true;
 				}
+                return toReturn;
 			}
-		}
 		return false;
 	}
 	
@@ -147,15 +95,14 @@ public class FluidUtils {
 	
 	private static void addFluidMapping(String in, String altName)
 	{
-		String fluidKeyName = in;
 		List<String> mappedValues;
-		if(!fluidEquivilentMapping.containsKey(fluidKeyName))
+		if(!fluidEquivalentMapping.containsKey(in))
 		{
-			mappedValues = new LinkedList<String>();
-			fluidEquivilentMapping.put(fluidKeyName, mappedValues);
+			mappedValues = new LinkedList<>();
+			fluidEquivalentMapping.put(in, mappedValues);
 		}
 		else
-			mappedValues = fluidEquivilentMapping.get(fluidKeyName);
+			mappedValues = fluidEquivalentMapping.get(in);
 		
 		mappedValues.add(altName);
 	}
@@ -169,6 +116,6 @@ public class FluidUtils {
 		if(inFluidName.equals(otherFluidName))
 			return true;
 		
-		return fluidEquivilentMapping.containsKey(inFluidName) && fluidEquivilentMapping.get(inFluidName).contains(otherFluidName);
+		return fluidEquivalentMapping.containsKey(inFluidName) && fluidEquivalentMapping.get(inFluidName).contains(otherFluidName);
 	}
 }

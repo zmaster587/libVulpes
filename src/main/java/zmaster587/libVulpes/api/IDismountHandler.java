@@ -7,5 +7,5 @@ public interface IDismountHandler {
 	 * Called when a player entity attempts to dismount from this entity
 	 * @param entity
 	 */
-	public void handleDismount(Entity entity);
+	void handleDismount(Entity entity);
 }

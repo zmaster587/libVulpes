@@ -44,13 +44,13 @@ public class TileMultiBlock extends TileEntity {
 	protected boolean completeStructure, canRender;
 	protected byte timeAlive = 0;
 
-	protected LinkedList<IInventory> itemInPorts = new LinkedList<IInventory>();
-	protected LinkedList<IInventory> itemOutPorts = new LinkedList<IInventory>();
+	protected LinkedList<IInventory> itemInPorts = new LinkedList<>();
+	protected LinkedList<IInventory> itemOutPorts = new LinkedList<>();
 
-	protected LinkedList<IFluidHandlerInternal> fluidInPorts = new LinkedList<IFluidHandlerInternal>();
-	protected LinkedList<IFluidHandlerInternal> fluidOutPorts = new LinkedList<IFluidHandlerInternal>();
+	protected LinkedList<IFluidHandlerInternal> fluidInPorts = new LinkedList<>();
+	protected LinkedList<IFluidHandlerInternal> fluidOutPorts = new LinkedList<>();
 
-	protected static HashMap<Character, List<BlockMeta>> charMapping = new HashMap<Character, List<BlockMeta>>();
+	protected static HashMap<Character, List<BlockMeta>> charMapping = new HashMap<>();
 
 	public TileMultiBlock() {
 		completeStructure = false;
@@ -171,9 +171,7 @@ public class TileMultiBlock extends TileEntity {
 
 	/**
 	 * @param world world
-	 * @param destroyedX x coord of destroyed block
-	 * @param destroyedY y coord of destroyed block
-	 * @param destroyedZ z coord of destroyed block
+	 * @param destroyedPos coords of destroyed block
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
 	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, IBlockState state) {
@@ -200,12 +198,18 @@ public class TileMultiBlock extends TileEntity {
 					int globalZ = pos.getZ() - (x - offset.x)*front.getFrontOffsetX()  - (z-offset.z)*front.getFrontOffsetZ();
 
 
-					//This block is being broken anyway so don't bother
-					if(blockBroken && globalX == destroyedPos.getX() &&
-							globalY == destroyedPos.getY() &&
-							globalZ == destroyedPos.getZ())
-						continue;
 					TileEntity tile = world.getTileEntity(new BlockPos(globalX, globalY, globalZ));
+					//This block is being broken anyway so don't bother
+					if(blockBroken 
+					&& globalX == destroyedPos.getX() 
+					&& globalY == destroyedPos.getY() 
+					&& globalZ == destroyedPos.getZ()) {
+						if(tile instanceof IMultiblock) {
+							((IMultiblock)tile).setIncomplete();
+						}
+						tile.invalidate();
+						continue;
+					}
 					Block block = world.getBlockState(new BlockPos(globalX, globalY, globalZ)).getBlock();
 
 					destroyBlockAt(new BlockPos(globalX, globalY, globalZ), block, tile);
@@ -222,9 +226,7 @@ public class TileMultiBlock extends TileEntity {
 	/**
 	 * Called when the multiblock is being deconstructed.  This is called for each block in the structure.
 	 * Provided in case of special handling
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param destroyedPos coords of destroyed block
 	 * @param block
 	 * @param tile
 	 */
@@ -250,11 +252,13 @@ public class TileMultiBlock extends TileEntity {
 				placeholder.getReplacedTileEntity().writeToNBT(nbt);
 
 				world.getTileEntity(destroyedPos).readFromNBT(nbt);
-			}
+			} else if (world.getTileEntity(destroyedPos) != null)
+				world.getTileEntity(destroyedPos).invalidate();
 		}
 		//Make all pointers incomplete
 		else if(tile instanceof IMultiblock) {
 			((IMultiblock)tile).setIncomplete();
+			tile.invalidate();
 		}
 	}
 
@@ -277,7 +281,7 @@ public class TileMultiBlock extends TileEntity {
 	}
 
 	public List<BlockMeta> getAllowableWildCardBlocks() {
-		List<BlockMeta> list =new ArrayList<BlockMeta>();
+		List<BlockMeta> list = new ArrayList<>();
 		return list;
 	}
 
@@ -314,12 +318,12 @@ public class TileMultiBlock extends TileEntity {
 		Object[][][] structure = getStructure();
 
 		Vector3F<Integer> offset = getControllerOffset(structure);
-		List<BlockPos> replacableBlocks = new LinkedList<BlockPos>();
+		List<BlockPos> replacableBlocks = new LinkedList<>();
 
 		EnumFacing front = getFrontDirection(state);
 
 		//Store tile entities for later processing so we don't risk the check failing halfway through leaving half the multiblock assigned
-		LinkedList<TileEntity> tiles = new LinkedList<TileEntity>();
+		LinkedList<TileEntity> tiles = new LinkedList<>();
 
 		for(int y = 0; y < structure.length; y++) {
 			for(int z = 0; z < structure[0].length; z++) {
@@ -366,10 +370,17 @@ public class TileMultiBlock extends TileEntity {
 							continue;
 					}
 					//Make sure the structure is valid
-					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.AIR && world.isAirBlock(globalPos)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta))) {
+					if(!(structure[y][z][x] instanceof Character
+					&& (Character)structure[y][z][x] == 'c')
+					&& !(structure[y][z][x] instanceof Block
+					&& structure[y][z][x] == Blocks.AIR
+					&& world.isAirBlock(globalPos))
+					&& !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta))) {
 
 						//Can it be replaced?
-						if(block.isReplaceable(world, globalPos) && structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.AIR )
+						if(block.isReplaceable(world, globalPos)
+						&& structure[y][z][x] instanceof Block
+						&& structure[y][z][x] == Blocks.AIR)
 							replacableBlocks.add(globalPos);
 						else {
 							LibVulpes.proxy.spawnParticle("errorBox", world, globalX, globalY, globalZ, 0, 0, 0);
@@ -436,40 +447,38 @@ public class TileMultiBlock extends TileEntity {
 		if(input instanceof Character && (Character)input == '*') {
 			return getAllowableWildCardBlocks();
 		}
-		else if(input instanceof Character  && charMapping.containsKey((Character)input)) {
-			return charMapping.get((Character)input);
+		else if(input instanceof Character  && charMapping.containsKey(input)) {
+			return charMapping.get(input);
 		}
 		else if(input instanceof String) { //OreDict entry
 			List<ItemStack> stacks = OreDictionary.getOres((String)input);
-			List<BlockMeta> list = new LinkedList<BlockMeta>();
+			List<BlockMeta> list = new LinkedList<>();
 			for(ItemStack stack : stacks) {
 				//stack.get
 				Block block = Block.getBlockFromItem(stack.getItem());
-				if(block != null)
-					list.add(new BlockMeta(block, stack.getItem().getMetadata(stack.getItemDamage())));
+				list.add(new BlockMeta(block, stack.getItem().getMetadata(stack.getItemDamage())));
 			}
 			return list;
 		}
 		else if(input instanceof Block) {
-			List<BlockMeta> list = new ArrayList<BlockMeta>();
+			List<BlockMeta> list = new ArrayList<>();
 			list.add(new BlockMeta((Block) input, BlockMeta.WILDCARD));
 			return list;
 		}
 		else if(input instanceof BlockMeta) {
-			List<BlockMeta> list = new ArrayList<BlockMeta>();
+			List<BlockMeta> list = new ArrayList<>();
 			list.add((BlockMeta) input);
 			return list;
 		}
 		else if(input instanceof Block[]) {
-			List<BlockMeta> list = new ArrayList<BlockMeta>();
+			List<BlockMeta> list = new ArrayList<>();
 			for(Block b : (Block[])input) list.add(new BlockMeta(b));
 			return list;
 		}
 		else if(input instanceof List) {
 			return (List<BlockMeta>)input;
 		}
-		List<BlockMeta> list = new ArrayList<BlockMeta>();
-		return list;
+		return new ArrayList<>();
 	}
 
 	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
@@ -506,9 +515,9 @@ public class TileMultiBlock extends TileEntity {
 		else if(tile instanceof TileFluidHatch) {
 			TileFluidHatch liquidHatch = (TileFluidHatch)tile;
 			if(liquidHatch.isOutputOnly())
-				fluidOutPorts.add((IFluidHandlerInternal)liquidHatch);
+				fluidOutPorts.add(liquidHatch);
 			else
-				fluidInPorts.add((IFluidHandlerInternal)liquidHatch);
+				fluidInPorts.add(liquidHatch);
 		}
 	}
 
@@ -517,7 +526,7 @@ public class TileMultiBlock extends TileEntity {
 			for(int z = 0; z < structure[0].length; z++) {
 				for(int x = 0; x< structure[0][0].length; x++) {
 					if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c')
-						return new Vector3F<Integer>(x, y, z);
+						return new Vector3F<>(x, y, z);
 				}
 			}
 		}

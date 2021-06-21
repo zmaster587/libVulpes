@@ -74,7 +74,7 @@ public class GuiModular extends GuiContainer {
 			int b) {
 		super.drawGuiContainerForegroundLayer(a, b);
 
-		this.fontRenderer.drawString(I18n.format(unlocalizedName, new Object[0]), 8, 6, 4210752);
+		this.fontRenderer.drawString(I18n.format(unlocalizedName), 8, 6, 4210752);
 
 		for(ModuleBase module : modules)
 			if(module.getVisible())
@@ -122,7 +122,7 @@ public class GuiModular extends GuiContainer {
 	}
 
 	public List<Rectangle> getExtraAreasCovered() {
-		List<Rectangle> list = new LinkedList<Rectangle>();
+		List<Rectangle> list = new LinkedList<>();
 		
 		for(ModuleBase module : modules) {
 				list.add(new Rectangle((width - xSize) / 2 + module.offsetX, (height - ySize) / 2 + module.offsetY, module.getSizeX(), module.getSizeY()));

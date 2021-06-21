@@ -22,24 +22,25 @@ import zmaster587.libVulpes.items.ItemOreProduct;
 import zmaster587.libVulpes.util.ItemStackMapping;
 import zmaster587.libVulpes.util.OreProductColorizer;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class MaterialRegistry {
 
-	static HashMap<Object, MixedMaterial> mixedMaterialList = new HashMap<Object, MixedMaterial>();
+	static HashMap<Object, MixedMaterial> mixedMaterialList = new HashMap<>();
 	static HashMap<AllowedProducts, List<Block>> productBlockListMapping;
-	static List<MaterialRegistry> registries = new LinkedList<MaterialRegistry>();
+	static List<MaterialRegistry> registries = new LinkedList<>();
 
 	@SideOnly(Side.CLIENT)
 	static Object oreProductColorizer;
 
-	public HashMap<String, zmaster587.libVulpes.api.material.Material> strToMaterial = new HashMap<String, zmaster587.libVulpes.api.material.Material>();
-	public List<zmaster587.libVulpes.api.material.Material> materialList = new LinkedList<zmaster587.libVulpes.api.material.Material>();
+	public HashMap<String, zmaster587.libVulpes.api.material.Material> strToMaterial = new HashMap<>();
+	public List<zmaster587.libVulpes.api.material.Material> materialList = new LinkedList<>();
 	public Item[] oreProducts;
 
 
 	public MaterialRegistry() {
-		productBlockListMapping = new HashMap<AllowedProducts, List<Block>>();
+		productBlockListMapping = new HashMap<>();
 		registries.add(this);
 	}
 
@@ -58,7 +59,7 @@ public class MaterialRegistry {
 		for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("BLOCK"))) {
 			if(block == null ||  Item.getItemFromBlock(block) == null)
 				continue;
-			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, new Block[] {block});
+			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, block);
 			Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)oreProductColorizer,  Item.getItemFromBlock(block));
 		}
 
@@ -66,7 +67,7 @@ public class MaterialRegistry {
 		for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("COIL"))) {
 			if(block == null ||  Item.getItemFromBlock(block) == null)
 				continue;
-			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, new Block[] { block});
+			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, block);
 			Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)oreProductColorizer, Item.getItemFromBlock(block));
 		}
 
@@ -220,16 +221,16 @@ public class MaterialRegistry {
 
 	/**
 	 * @param stack the item stack to get the material of
-	 * @return {@link Materials} of the itemstack if it exists, otherwise null
+	 * @return {@link zmaster587.libVulpes.api.material.Material} of the itemstack if it exists, otherwise null
 	 */
-	public static zmaster587.libVulpes.api.material.Material getMaterialFromItemStack(ItemStack stack) {
+	public static zmaster587.libVulpes.api.material.Material getMaterialFromItemStack(@Nonnull ItemStack stack) {
 		Item item = stack.getItem();
 
 		//If items is an itemOreProduct it must have been registered
 
 		for(MaterialRegistry  registry : registries) {
 			for(Item i : registry.oreProducts) {
-				if(item == i && i != null) {
+				if(item == i) {
 					return registry.materialList.get(stack.getItemDamage());
 				}
 			}
@@ -252,26 +253,28 @@ public class MaterialRegistry {
 	/**
 	 * @param material
 	 * @param product
-	 * @return an itemstack of size one containing the product with the given material, or null if one does not exist
+	 * @return an ItemStack of size one containing the product with the given material, or ItemStack.EMPTY if one does not exist
 	 */
-	public static ItemStack getItemStackFromMaterialAndType(String material,AllowedProducts product) {
+	@Nonnull
+	public static ItemStack getItemStackFromMaterialAndType(String material, AllowedProducts product) {
 		return getItemStackFromMaterialAndType(material, product,1);
 	}
 
 	/**
-	 * @param material
+	 * @param ore
 	 * @param product
 	 * @param amount stackSize
-	 * @return an itemstack of stackSize amount containing the product with the given material, or null if one does not exist
+	 * @return an ItemStack of stackSize amount containing the product with the given material, or ItemStack.EMPTY if one does not exist
 	 */
-	public static ItemStack getItemStackFromMaterialAndType(String ore,AllowedProducts product, int amount) {
+	@Nonnull
+	public static ItemStack getItemStackFromMaterialAndType(String ore, AllowedProducts product, int amount) {
 		for(MaterialRegistry  registry : registries) {
 			zmaster587.libVulpes.api.material.Material ore2 = registry.strToMaterial.get(ore);
 
 			if(ore2 != null && product != null)
 				return new ItemStack( registry.oreProducts[product.ordinal()], amount, ore2.index);
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	/**
@@ -279,17 +282,18 @@ public class MaterialRegistry {
 	 * @param material new mixed material to create
 	 */
 	public static void registerMixedMaterial(MixedMaterial material) {
-		if(material.getInput() instanceof ItemStack)
-			mixedMaterialList.put( new ItemStackMapping((ItemStack) material.getInput()), material);
+		Object inputObj = material.getInput();
+		if(inputObj instanceof ItemStack && !((ItemStack) inputObj).isEmpty())
+			mixedMaterialList.put( new ItemStackMapping((ItemStack) inputObj), material);
 		else
-			mixedMaterialList.put( material.getInput(), material);
+			mixedMaterialList.put(inputObj, material);
 	}
 
 	/**
 	 * @param stack
 	 * @return {@link MixedMaterial} that makes up the item, null if the item is not registered
 	 */
-	public MixedMaterial getMixedMaterial(ItemStack stack) {
+	public MixedMaterial getMixedMaterial(@Nonnull ItemStack stack) {
 		return mixedMaterialList.get(new ItemStackMapping(stack));
 	}
 
@@ -301,7 +305,7 @@ public class MaterialRegistry {
 		return mixedMaterialList.get(str);
 	}
 
-	public static int getColorFromItemMaterial(ItemStack stack) {
+	public static int getColorFromItemMaterial(@Nonnull ItemStack stack) {
 
 		zmaster587.libVulpes.api.material.Material material = getMaterialFromItemStack(stack);
 		if(material == null) {
@@ -355,7 +359,7 @@ public class MaterialRegistry {
 	}
 
 	public static List<zmaster587.libVulpes.api.material.Material> getAllMaterials() {
-		List<zmaster587.libVulpes.api.material.Material> list = new LinkedList<zmaster587.libVulpes.api.material.Material>();
+		List<zmaster587.libVulpes.api.material.Material> list = new LinkedList<>();
 		for(MaterialRegistry registry : registries) {
 			list.addAll(registry.materialList);
 		}

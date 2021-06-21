@@ -1,7 +1,5 @@
 package zmaster587.libVulpes.api.material;
 
-import net.minecraft.block.Block;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,7 +27,7 @@ public class AllowedProducts {
 		product.flagValue = currentFlagValue;
 		product.name = name;
 		currentFlagValue++;
-		MaterialRegistry.productBlockListMapping.put(product, new ArrayList<Block>());
+		MaterialRegistry.productBlockListMapping.put(product, new ArrayList<>());
 		map.put(name, product);
 		list.add(product);
 	}
@@ -43,8 +41,8 @@ public class AllowedProducts {
 	}
 	
 	private static short currentFlagValue = 1;
-	private static HashMap<String, AllowedProducts> map = new HashMap<String, AllowedProducts>();
-	private static List<AllowedProducts> list = new LinkedList<AllowedProducts>();
+	private static HashMap<String, AllowedProducts> map = new HashMap<>();
+	private static List<AllowedProducts> list = new LinkedList<>();
 	/*DUST,
 	INGOT,
 	GEM,

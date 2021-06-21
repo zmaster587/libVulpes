@@ -4,5 +4,5 @@ public interface IAdjBlockUpdate {
 	/**
 	 * Called when an adjacent block is updated
 	 */
-	public void onAdjacentBlockUpdated();
+	void onAdjacentBlockUpdated();
 }

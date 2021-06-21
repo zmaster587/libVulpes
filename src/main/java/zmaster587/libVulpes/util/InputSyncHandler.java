@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class InputSyncHandler {
 
-	public static HashMap<EntityPlayer, Boolean> spaceDown = new HashMap<EntityPlayer, Boolean>();
+	public static HashMap<EntityPlayer, Boolean> spaceDown = new HashMap<>();
 	
 
 	public static boolean isSpaceDown(EntityPlayer player) {
@@ -29,7 +29,7 @@ public class InputSyncHandler {
 		case 0:
 			
 			stack = player.inventory.armorInventory.get(2);
-			if(stack != null) {
+			if(!stack.isEmpty()) {
 				IJetPack pack;
 				if(stack.getItem() instanceof IJetPack) {
 					pack = ((IJetPack)stack.getItem());
@@ -39,7 +39,7 @@ public class InputSyncHandler {
 					IInventory inv = ((IModularArmor)stack.getItem()).loadModuleInventory(stack);
 					
 					for(int i = 0; i < inv.getSizeInventory(); i++) {
-						if(inv.getStackInSlot(i) != null && inv.getStackInSlot(i).getItem() instanceof IJetPack) {
+						if(!inv.getStackInSlot(i).isEmpty() && inv.getStackInSlot(i).getItem() instanceof IJetPack) {
 							pack = ((IJetPack)inv.getStackInSlot(i).getItem());
 							pack.setEnabledState(inv.getStackInSlot(i), !pack.isEnabled(inv.getStackInSlot(i)));
 						}
@@ -52,7 +52,7 @@ public class InputSyncHandler {
 			
 		case 1:
 			stack = player.inventory.armorInventory.get(2);
-			if(stack != null) {
+			if(!stack.isEmpty()) {
 				IJetPack pack;
 				if(stack.getItem() instanceof IJetPack) {
 					pack = ((IJetPack)stack.getItem());
@@ -62,7 +62,7 @@ public class InputSyncHandler {
 					IInventory inv = ((IModularArmor)stack.getItem()).loadModuleInventory(stack);
 					
 					for(int i = 0; i < inv.getSizeInventory(); i++) {
-						if(inv.getStackInSlot(i) != null && inv.getStackInSlot(i).getItem() instanceof IJetPack) {
+						if(!inv.getStackInSlot(i).isEmpty() && inv.getStackInSlot(i).getItem() instanceof IJetPack) {
 							pack = ((IJetPack)inv.getStackInSlot(i).getItem());
 							pack.changeMode(inv.getStackInSlot(i), inv, player);
 						}

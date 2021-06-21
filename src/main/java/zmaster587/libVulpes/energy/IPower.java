@@ -5,15 +5,20 @@ import zmaster587.libVulpes.api.IUniversalEnergy;
 
 public interface IPower extends IUniversalEnergy {
 	
-	public boolean canConnectEnergy(EnumFacing facing);
+	boolean canConnectEnergy(EnumFacing facing);
 	
-	public int extractEnergy(EnumFacing dir, int maxExtract, boolean simulate);
+	int extractEnergy(EnumFacing dir, int maxExtract, boolean simulate);
 	
-	public int getEnergyStored(EnumFacing dir);
+	int getEnergyStored(EnumFacing dir);
 	
-	public int getMaxEnergyStored(EnumFacing dir);
+	int getMaxEnergyStored(EnumFacing dir);
 	
-	public int receiveEnergy(EnumFacing dir, int amt, boolean simulate);
-	
-	public int receiveEnergy(int amt, boolean simulate);
+	int receiveEnergy(EnumFacing dir, int amt, boolean simulate);
+
+	/**
+	 * @param amt
+	 * @param simulate
+	 * @return amount of energy used out of amt
+	 */
+	int receiveEnergy(int amt, boolean simulate);
 }

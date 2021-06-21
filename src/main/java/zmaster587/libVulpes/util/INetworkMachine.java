@@ -9,11 +9,11 @@ import net.minecraftforge.fml.relauncher.Side;
 public interface INetworkMachine {
 	
 	//Writes data to the network given an id of what type of packet to write
-	public void writeDataToNetwork(ByteBuf out, byte id);
+	void writeDataToNetwork(ByteBuf out, byte id);
 	
 	//Reads data, stores read data to nbt to be passed to useNetworkData
-	public void readDataFromNetwork(ByteBuf in, byte packetId, NBTTagCompound nbt);
+	void readDataFromNetwork(ByteBuf in, byte packetId, NBTTagCompound nbt);
 	
 	//Applies changes from network
-	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt);
+	void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt);
 }

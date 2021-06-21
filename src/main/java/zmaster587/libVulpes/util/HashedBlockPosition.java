@@ -3,6 +3,9 @@ package zmaster587.libVulpes.util;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class HashedBlockPosition  {
 	public int x,z;
 	public short y;
@@ -14,12 +17,13 @@ public class HashedBlockPosition  {
 		this.z = z;
 	}
 	
-	public HashedBlockPosition(BlockPos pos) {
+	public HashedBlockPosition(@Nonnull BlockPos pos) {
 		this.x = pos.getX();
 		this.y = (short)pos.getY();
 		this.z = pos.getZ();
 	}
-	
+
+	@Nonnull
 	public BlockPos getBlockPos() {
 		return new BlockPos(x,y,z);
 	}
@@ -30,15 +34,17 @@ public class HashedBlockPosition  {
 	 * @param dz z offset
 	 * @return a new object containing the coordinates of that offset
 	 */
+	@Nonnull
 	public HashedBlockPosition getPositionAtOffset(int dx, int dy, int dz) {
 		return new HashedBlockPosition(dx + x, dy + y, dz + z);
 	}
-	
-	public HashedBlockPosition getPositionAtOffset(EnumFacing facing) {
+
+	@Nonnull
+	public HashedBlockPosition getPositionAtOffset(@Nonnull EnumFacing facing) {
 		return new HashedBlockPosition(facing.getFrontOffsetX() + x, facing.getFrontOffsetY() + y, facing.getFrontOffsetZ() + z);
 	}
 	
-	public double getDistance(HashedBlockPosition otherPos) {
+	public double getDistance(@Nonnull HashedBlockPosition otherPos) {
 		return Math.sqrt(Math.pow(x-otherPos.x, 2) + Math.pow(y-otherPos.y, 2) + Math.pow(z-otherPos.z, 2));
 	}
 	
@@ -48,7 +54,7 @@ public class HashedBlockPosition  {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(@Nullable Object obj) {
 		
 		if(obj instanceof HashedBlockPosition) {
 			return this.x == ((HashedBlockPosition) obj).x && this.y == ((HashedBlockPosition) obj).y && this.z == ((HashedBlockPosition) obj).z;
@@ -58,6 +64,7 @@ public class HashedBlockPosition  {
 	}
 	
 	@Override
+	@Nonnull
 	public String toString() {
 		return this.x + " " + this.y + " " + this.z;
 	}

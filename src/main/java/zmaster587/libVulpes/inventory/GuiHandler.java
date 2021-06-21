@@ -6,7 +6,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
 public class GuiHandler implements IGuiHandler {
@@ -32,7 +31,7 @@ public class GuiHandler implements IGuiHandler {
 			ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
-			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
+			if(stack.isEmpty() || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
 			
@@ -60,7 +59,7 @@ public class GuiHandler implements IGuiHandler {
 			ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
-			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
+			if(stack.isEmpty() || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
 			

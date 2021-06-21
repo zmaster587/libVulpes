@@ -7,6 +7,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer implements ISidedInventory {
 
 	protected EmbeddedInventory inventory;
@@ -37,18 +40,20 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		return inventory.getStackInSlot(slot);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amt) {
 		return inventory.decrStackSize(slot, amt);
 	}
 
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
@@ -59,6 +64,7 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 	}
 	
 	@Override
+	@Nullable
 	public String getName() {
 		return null;
 	}
@@ -83,18 +89,19 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 	}
 	
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn,
+	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn,
 			EnumFacing direction) {
 		return inventory.canInsertItem(index, itemStackIn, direction);
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack,
+	public boolean canExtractItem(int index, @Nonnull ItemStack stack,
 			EnumFacing direction) {
 		return inventory.canExtractItem(index, stack, direction);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		return inventory.removeStackFromSlot(index);
 	}

@@ -18,7 +18,10 @@ import net.minecraft.world.World;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
-import java.util.ArrayList;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.ParametersAreNullableByDefault;
 import java.util.List;
 
 /**
@@ -33,6 +36,7 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 
 	//Make invisible
 	@Override
+	@ParametersAreNullableByDefault
 	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
 	}
@@ -52,11 +56,14 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 
 	//Make sure to get the block this one is storing rather than the placeholder itself
 	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
-			World world, BlockPos pos, EntityPlayer player) {
+	@Nonnull
+	public ItemStack getPickBlock(@Nullable IBlockState state, RayTraceResult target,
+			World world, @Nonnull BlockPos pos, EntityPlayer player) {
 		
 		TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(pos);
-		return new ItemStack(tile.getReplacedState().getBlock(), 1, tile.getReplacedMeta());
+		if(tile != null && tile.getReplacedState() != null)
+			return new ItemStack(tile.getReplacedState().getBlock(), 1, tile.getReplacedMeta());
+		else return ItemStack.EMPTY;
 	}
 	
 	
@@ -76,7 +83,7 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 			IBlockState newBlockState = tile.getReplacedState();
 			Block newBlock = newBlockState.getBlock();
 
-			if(newBlock != null && newBlock != Blocks.AIR && player.canHarvestBlock(newBlockState)) {
+			if(newBlock != Blocks.AIR && player.canHarvestBlock(newBlockState)) {
 				List<ItemStack> stackList = newBlock.getDrops(world, pos, newBlockState, 0);
 
 				for(ItemStack stack : stackList) {
@@ -89,10 +96,11 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileEntity tile = world.getTileEntity(pos);
 
-		if(tile != null && tile instanceof TilePlaceholder) {
+		if(tile instanceof TilePlaceholder) {
 			tile = ((TilePlaceholder)tile).getMasterBlock();
 			if(tile instanceof TileMultiBlock)
 				((TileMultiBlock)tile).deconstructMultiBlock(world, pos, true, world.getBlockState(tile.getPos()));
@@ -102,12 +110,13 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 	}
 
 	@Override
+	@ParametersAreNullableByDefault
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TilePlaceholder();
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(@Nullable World worldIn, int meta) {
 		return new TilePlaceholder();
 	}
 }

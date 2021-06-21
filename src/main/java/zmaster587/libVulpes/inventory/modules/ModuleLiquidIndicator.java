@@ -17,7 +17,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
@@ -184,10 +183,10 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		int xSize = 12;
 
 		if( relativeX > 0 && relativeX < xSize && relativeY > 0 && relativeY < ySize) {
-			List<String> list = new LinkedList<String>();
+			List<String> list = new LinkedList<>();
 			FluidStack fluidStack = tile.getTankProperties()[0].getContents();
 
-			if(fluidStack!= null) {
+			if(fluidStack != null) {
 
 				list.add(fluidStack.getLocalizedName()+": "+fluidStack.amount + " / " + tile.getTankProperties()[0].getCapacity() + " mB");
 
@@ -230,7 +229,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			if(sprite == null)
 				gui.drawTexturedModalRect(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0, 0, xSize, (int)(percent*ySize));
 			else {
-				Minecraft.getMinecraft().renderEngine.bindTexture(Minecraft.getMinecraft().getTextureMapBlocks().LOCATION_BLOCKS_TEXTURE);
+				Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 				gui.drawTexturedModalRect(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), sprite, xSize, (int)(percent*ySize));
 			}
 			//gui.drawTexturedModelRectFrom(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), fluidIcon, xSize, (int)(percent*ySize));

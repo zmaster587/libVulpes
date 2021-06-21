@@ -5,6 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+
 public class InventoryCompat {
 
 	static boolean buildCraft_injectable;
@@ -25,26 +27,26 @@ public class InventoryCompat {
 		if(buildCraft_injectable) {
 			return true;
 		}
-		return tile != null && tile instanceof IInventory && ZUtils.numEmptySlots((IInventory)tile) > 0;
+		return tile instanceof IInventory && ZUtils.numEmptySlots((IInventory) tile) > 0;
 	}
 	
-	public static boolean canInjectItems(TileEntity tile, ItemStack item) {
+	public static boolean canInjectItems(TileEntity tile, @Nonnull ItemStack item) {
 		
 		if(buildCraft_injectable) {
 			return true;
 		}
-		return tile != null && tile instanceof IInventory && (ZUtils.numEmptySlots((IInventory)tile) > 0 || ZUtils.doesInvHaveRoom(item, (IInventory)tile));
+		return tile instanceof IInventory && (ZUtils.numEmptySlots((IInventory) tile) > 0 || ZUtils.doesInvHaveRoom(item, (IInventory) tile));
 	}
 	
-	public static boolean canInjectItems(IInventory tile, ItemStack item) {
+	public static boolean canInjectItems(IInventory tile, @Nonnull ItemStack item) {
 		
 		if(buildCraft_injectable) {
 			return true;
 		}
-		return tile != null && (ZUtils.numEmptySlots((IInventory)tile) > 0 || ZUtils.doesInvHaveRoom(item, (IInventory)tile));
+		return tile != null && (ZUtils.numEmptySlots(tile) > 0 || ZUtils.doesInvHaveRoom(item, tile));
 	}
 	
-	public static void injectItem(Object tile, ItemStack item) {
+	public static void injectItem(Object tile, @Nonnull ItemStack item) {
 		if(buildCraft_injectable) {}
 			
 		ZUtils.mergeInventory(item, (IInventory)tile);

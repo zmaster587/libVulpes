@@ -2,9 +2,11 @@ package zmaster587.libVulpes.util;
 
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class ItemStackMapping {
-	ItemStack stack;
-	public ItemStackMapping(ItemStack stack) {
+	private ItemStack stack;
+	public ItemStackMapping(@Nonnull ItemStack stack) {
 		this.stack = stack;
 	}
 

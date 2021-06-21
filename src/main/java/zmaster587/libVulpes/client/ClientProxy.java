@@ -33,7 +33,7 @@ public class ClientProxy extends CommonProxy {
 	}
 	
 	@Override
-	public void preinit() {
+	public void preInit() {
 		OBJLoader.INSTANCE.addDomain("libvulpes");
 	}
 	
@@ -44,7 +44,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void spawnParticle(String particle, World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
 
-		if(particle == "errorBox") {
+		if(particle.equals("errorBox")) {
 			FxErrorBlock fx = new FxErrorBlock(world, x, y, z);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
@@ -67,7 +67,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInitBlocks()
 	{
-		LinkedList<Item> blockItems = new LinkedList<Item>();
+		LinkedList<Item> blockItems = new LinkedList<>();
 		
 		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockAdvancedMotor));
 		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockAdvStructureBlock));

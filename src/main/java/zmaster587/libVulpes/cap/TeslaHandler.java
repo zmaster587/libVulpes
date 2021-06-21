@@ -25,8 +25,7 @@ public class TeslaHandler {
 	
 	public static boolean hasTeslaCapability(ICapabilityProvider e, Capability<?> cap) {
 		if(TESLA_CONSUMER != null && TESLA_HOLDER != null && TESLA_PRODUCER != null) {
-			if(cap == TESLA_CONSUMER || cap == TESLA_HOLDER || cap == TESLA_PRODUCER)
-				return true;
+			return cap == TESLA_CONSUMER || cap == TESLA_HOLDER || cap == TESLA_PRODUCER;
 		}
 		return false;
 	}

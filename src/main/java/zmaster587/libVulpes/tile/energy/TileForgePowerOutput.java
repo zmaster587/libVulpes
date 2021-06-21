@@ -6,6 +6,8 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
+import javax.annotation.Nullable;
+
 public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage, ITickable {
 
 	public TileForgePowerOutput() {
@@ -18,6 +20,7 @@ public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage
 	}
 
 	@Override
+	@Nullable
 	public String getName() {
 		return null;
 	}
@@ -50,7 +53,8 @@ public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage
 
 				if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
 					IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
-					this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
+					if(storage != null)
+						this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
 				}
 			}
 		}

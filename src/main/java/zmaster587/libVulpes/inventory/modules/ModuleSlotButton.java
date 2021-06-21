@@ -20,19 +20,21 @@ import org.lwjgl.opengl.GL11;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.TextureResources;
 
+import javax.annotation.Nonnull;
+
 public class ModuleSlotButton extends ModuleButton {
 
 	ItemStack stack;
 	World worldObj;
 
-	public ModuleSlotButton(int offsetX, int offsetY, int buttonId, IButtonInventory tile, ItemStack slotDisplay,  World world ) {
+	public ModuleSlotButton(int offsetX, int offsetY, int buttonId, IButtonInventory tile, @Nonnull ItemStack slotDisplay, World world ) {
 
 		super(offsetX, offsetY, buttonId , "", tile, TextureResources.buttonNull, slotDisplay.getDisplayName() ,16,16);
 		stack = slotDisplay;
 		this.worldObj = world;
 	}
 
-	public ModuleSlotButton(int offsetX, int offsetY, int buttonId, IButtonInventory tile, ItemStack slotDisplay, String extraDisplay,  World world ) {
+	public ModuleSlotButton(int offsetX, int offsetY, int buttonId, IButtonInventory tile, @Nonnull ItemStack slotDisplay, String extraDisplay,  World world ) {
 
 		super(offsetX, offsetY, buttonId , "", tile, TextureResources.buttonNull, slotDisplay.getDisplayName() + " \n" + extraDisplay,16,16);
 		stack = slotDisplay;

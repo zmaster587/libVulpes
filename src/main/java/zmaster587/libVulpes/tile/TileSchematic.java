@@ -16,10 +16,10 @@ public class TileSchematic extends TilePlaceholder implements ITickable {
 
 	private final int ttl = 6000;
 	private int timeAlive = 0;
-	List<BlockMeta> possibleBlocks;
+	private List<BlockMeta> possibleBlocks;
 
 	public TileSchematic() {
-		possibleBlocks = new ArrayList<BlockMeta>();
+		possibleBlocks = new ArrayList<>();
 	}
 
 	@Override
@@ -61,12 +61,12 @@ public class TileSchematic extends TilePlaceholder implements ITickable {
 		super.writeToNBT(nbt);
 		nbt.setInteger("timeAlive", timeAlive);
 
-		List<Integer> blockIds = new ArrayList<Integer>();
-		List<Integer> blockMetas = new ArrayList<Integer>();
-		for(int i = 0;  i < possibleBlocks.size();i++) {
-			blockIds.add(Block.getIdFromBlock(possibleBlocks.get(i).getBlock()));
-			blockMetas.add((int)possibleBlocks.get(i).getMeta());
-		}
+		List<Integer> blockIds = new ArrayList<>();
+		List<Integer> blockMetas = new ArrayList<>();
+        for (BlockMeta possibleBlock : possibleBlocks) {
+            blockIds.add(Block.getIdFromBlock(possibleBlock.getBlock()));
+            blockMetas.add((int) possibleBlock.getMeta());
+        }
 
 		if(!blockIds.isEmpty()) {
 			Integer[] bufferSpace1 = new Integer[blockIds.size()];

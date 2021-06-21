@@ -7,6 +7,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class ItemIngredient extends Item
 {
 
@@ -38,9 +40,9 @@ public class ItemIngredient extends Item
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
+    public String getUnlocalizedName(@Nonnull ItemStack itemstack)
     {
-        return (new StringBuilder()).append("item." + super.getUnlocalizedName().split(":")[1]).append(".")
-                .append(itemstack.getItemDamage()).toString();
+        return "item." + super.getUnlocalizedName().split(":")[1] + "." +
+                itemstack.getItemDamage();
     }
 }

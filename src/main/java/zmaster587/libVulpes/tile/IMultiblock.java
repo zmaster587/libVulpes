@@ -5,13 +5,13 @@ import net.minecraft.util.math.BlockPos;
 
 public interface IMultiblock {
 	
-	public boolean hasMaster();
+	boolean hasMaster();
 	
-	public TileEntity getMasterBlock();
+	TileEntity getMasterBlock();
 	
-	public void setComplete(BlockPos pos);
+	void setComplete(BlockPos pos);
 	
-	public void setIncomplete();
+	void setIncomplete();
 	
-	public void setMasterBlock(BlockPos pos);
+	void setMasterBlock(BlockPos pos);
 }

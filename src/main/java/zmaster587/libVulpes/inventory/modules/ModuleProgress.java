@@ -39,7 +39,7 @@ public class ModuleProgress extends ModuleBase {
 		if(tooltip == null || tooltip.isEmpty())
 			this.tooltip.clear();
 		else
-			this.tooltip = (List<String>)Arrays.asList(tooltip.split("\\n"));
+			this.tooltip = Arrays.asList(tooltip.split("\\n"));
 	}
 
 	@Override

@@ -17,6 +17,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
+
 @SideOnly(Side.CLIENT)
 public class RenderHelper {
 
@@ -211,10 +213,10 @@ public class RenderHelper {
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 			int j = fontrenderer.getStringWidth(displayString) / 2;
 			GlStateManager.color(0.0F, 0.0F, 0.0F, 0.25F);
-			buffer.pos((double)(-j - 1), (double)(-1 + b0), 0.0D).endVertex();
-			buffer.pos((double)(-j - 1), (double)(8 + b0), 0.0D).endVertex();
-			buffer.pos((double)(j + 1), (double)(8 + b0), 0.0D).endVertex();
-			buffer.pos((double)(j + 1), (double)(-1 + b0), 0.0D).endVertex();
+			buffer.pos(-j - 1, -1 + b0, 0.0D).endVertex();
+			buffer.pos(-j - 1, 8 + b0, 0.0D).endVertex();
+			buffer.pos(j + 1, 8 + b0, 0.0D).endVertex();
+			buffer.pos(j + 1, -1 + b0, 0.0D).endVertex();
 			tessellator.draw();
 			GlStateManager.enableTexture2D();
 			fontrenderer.drawString(displayString, -fontrenderer.getStringWidth(displayString) / 2, b0, 553648127);
@@ -447,9 +449,9 @@ public class RenderHelper {
 		renderBottomFace(buff, yMin, xMin, zMin, xMax, zMax);
 	}
 
-	public static void renderItem(TileEntity tile, ItemStack itemstack, RenderItem dummyItem)
+	public static void renderItem(TileEntity tile, @Nonnull ItemStack itemstack, RenderItem dummyItem)
 	{
-		if (itemstack != null)
+		if (!itemstack.isEmpty())
 		{
 			EntityItem entityitem = new EntityItem(tile.getWorld(), 0.0D, 0.0D, 0.0D, itemstack);
 			Item item = entityitem.getItem().getItem();

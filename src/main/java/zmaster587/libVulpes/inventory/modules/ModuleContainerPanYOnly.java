@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ModuleContainerPan extends ModuleBase {
+public class ModuleContainerPanYOnly extends ModuleBase {
 
 	protected int currentPosX, currentPosY;
 	protected int screenSizeX;
@@ -37,15 +37,15 @@ public class ModuleContainerPan extends ModuleBase {
 	protected int internalOffsetX;
 	protected int internalOffsetY;
 
-	public ModuleContainerPan(int offsetX, int offsetY, List<ModuleBase> moduleList, List<ModuleBase> staticModules, ResourceLocation backdrop, int screenSizeX, int screenSizeY) {
+	public ModuleContainerPanYOnly(int offsetX, int offsetY, List<ModuleBase> moduleList, List<ModuleBase> staticModules, ResourceLocation backdrop, int screenSizeX, int screenSizeY) {
 		this(offsetX, offsetY, moduleList, staticModules, backdrop, screenSizeX, screenSizeY, 16, 16, 0, 0);
 	}
 
-	public ModuleContainerPan(int offsetX, int offsetY, List<ModuleBase> moduleList, List<ModuleBase> staticModules, ResourceLocation backdrop, int screenSizeX, int screenSizeY, int paddingX, int paddingY) {
+	public ModuleContainerPanYOnly(int offsetX, int offsetY, List<ModuleBase> moduleList, List<ModuleBase> staticModules, ResourceLocation backdrop, int screenSizeX, int screenSizeY, int paddingX, int paddingY) {
 		this(offsetX, offsetY, moduleList, staticModules, backdrop, screenSizeX, screenSizeY, paddingX, paddingY, 0, 0);
 	}
 
-	public ModuleContainerPan(int offsetX, int offsetY, List<ModuleBase> moduleList, List<ModuleBase> staticModules, ResourceLocation backdrop, int screenSizeX, int screenSizeY, int paddingX ,int paddingY, int containerSizeX, int containerSizeY) {
+	public ModuleContainerPanYOnly(int offsetX, int offsetY, List<ModuleBase> moduleList, List<ModuleBase> staticModules, ResourceLocation backdrop, int screenSizeX, int screenSizeY, int paddingX , int paddingY, int containerSizeX, int containerSizeY) {
 		super(offsetX, offsetY);
 		this.moduleList = moduleList;
 		this.staticModuleList = staticModules;
@@ -104,36 +104,21 @@ public class ModuleContainerPan extends ModuleBase {
 		return new LinkedList<>();
 	}
 
-	public void setOffset(int x, int y) {
-		internalOffsetX = x + screenSizeX;
+	public void setOffset(int y) {
 		internalOffsetY = y + screenSizeY;
 	}
 
-	public void setOffset2(int x ,int y) {
-		int deltaX = -x - currentPosX;
+	public void setOffset2(int y) {
 		int deltaY = -y - currentPosY;
-		currentPosX += deltaX;
 		currentPosY += deltaY;
 
-		//Transform
-		for(Slot slot : slotList) {
-			slot.xPos += deltaX;
-			slot.yPos += deltaX;
-		}
-
 		for(GuiButton button2 : buttonList) {
-			button2.x += deltaX;
 			button2.y += deltaY;
 		}
 
 		for(ModuleBase module : moduleList) {
-			module.offsetX += deltaX;
 			module.offsetY += deltaY;
 		}
-	}
-
-	public int getScrollX() {
-		return currentPosX;
 	}
 	
 	public int getScrollY() {
@@ -169,10 +154,10 @@ public class ModuleContainerPan extends ModuleBase {
 
 	public void onScroll(int dwheel) {
 		if(dwheel < 0) {
-			moveContainerInterior(0, -20);
+			moveContainerInterior(-20);
 		}
 		else if(dwheel > 0) {
-			moveContainerInterior(0, 20);
+			moveContainerInterior(20);
 		}
 	}
 
@@ -258,14 +243,8 @@ public class ModuleContainerPan extends ModuleBase {
 		return transformedMouseX > 0 && transformedMouseX < screenSizeX + offsetX && transformedMouseY > 0 && transformedMouseY < screenSizeY + offsetY;
 	}
 
-	protected void moveContainerInterior(int deltaX , int deltaY) {
+	protected void moveContainerInterior(int deltaY) {
 		//Clamp bounds ------------------------------------------------
-		if(deltaX > 0) {
-			deltaX = Math.min(deltaX, -currentPosX);
-		}
-		else if(deltaX < 0) {
-			deltaX = Math.max(deltaX, -containerSizeX - currentPosX);
-		}
 		if(deltaY > 0) {
 			deltaY = Math.min(deltaY, -currentPosY);
 		}
@@ -274,22 +253,13 @@ public class ModuleContainerPan extends ModuleBase {
 		}
 		//--------------------------------------------------------------
 
-		currentPosX += deltaX;
 		currentPosY += deltaY;
 
-		//Transform
-		for(Slot slot : slotList) {
-			slot.xPos += deltaX;
-			slot.yPos += deltaX;
-		}
-
 		for(GuiButton button2 : buttonList) {
-			button2.x += deltaX;
 			button2.y += deltaY;
 		}
 
 		for(ModuleBase module : moduleList) {
-			module.offsetX += deltaX;
 			module.offsetY += deltaY;
 		}
 	}
@@ -304,22 +274,18 @@ public class ModuleContainerPan extends ModuleBase {
 			ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
 			int i = scaledresolution.getScaledWidth();
 			int j = scaledresolution.getScaledHeight();
-			final int k = Mouse.getX() * i / Minecraft.getMinecraft().displayWidth;
 			final int l = j - Mouse.getY() * j / Minecraft.getMinecraft().displayHeight - 1;
 
 			if(outofBounds) {
-				mouseLastX = k;
 				mouseLastY = l;
 				outofBounds = false;
 			}
-			else if(mouseLastX != x && mouseLastY != y) {
+			else if(mouseLastY != y) {
 
-				int deltaX = (k - mouseLastX);
 				int deltaY = (l - mouseLastY);
 
-				moveContainerInterior(deltaX, deltaY);
+				moveContainerInterior(deltaY);
 
-				mouseLastX = k;
 				mouseLastY = l;
 			}
 		}
@@ -362,10 +328,10 @@ public class ModuleContainerPan extends ModuleBase {
 	@Override
 	public void setEnabled(boolean state) {
 		if(state && !isEnabled()) {
-			moveContainerInterior(10000, 0);
+			moveContainerInterior(0);
 		}
 		else if(!state && isEnabled()) {
-			moveContainerInterior(-10000, 0);
+			moveContainerInterior(0);
 		}
 		super.setEnabled(state);
 	}

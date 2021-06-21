@@ -28,19 +28,19 @@ public class ModuleToggleSwitch extends ModuleButton {
 		currentState = defaultState;
 	}
 	
-	public ModuleToggleSwitch(int offsetX, int offsetY, int buttonId, String text, IToggleButton tile, ResourceLocation buttonImages[], String tooltipText, boolean defaultState) {
+	public ModuleToggleSwitch(int offsetX, int offsetY, int buttonId, String text, IToggleButton tile, ResourceLocation[] buttonImages, String tooltipText, boolean defaultState) {
 		super(offsetX, offsetY, buttonId, text, tile, buttonImages, tooltipText);
 		this.tile = tile;
 		currentState = defaultState;
 	}
 
-	public ModuleToggleSwitch(int offsetX, int offsetY, int buttonId, String text, IToggleButton tile, ResourceLocation buttonImages[], int sizeX, int sizeY, boolean defaultState) {
+	public ModuleToggleSwitch(int offsetX, int offsetY, int buttonId, String text, IToggleButton tile, ResourceLocation[] buttonImages, int sizeX, int sizeY, boolean defaultState) {
 		super(offsetX, offsetY, buttonId, text, tile, buttonImages, sizeX, sizeY);
 		this.tile = tile;
 		currentState = defaultState;
 	}
 	
-	public ModuleToggleSwitch(int offsetX, int offsetY, int buttonId, String text, IToggleButton tile, ResourceLocation buttonImages[], String tooltipText, int sizeX, int sizeY, boolean defaultState) {
+	public ModuleToggleSwitch(int offsetX, int offsetY, int buttonId, String text, IToggleButton tile, ResourceLocation[] buttonImages, String tooltipText, int sizeX, int sizeY, boolean defaultState) {
 		super(offsetX, offsetY, buttonId, text, tile, buttonImages, tooltipText, sizeX, sizeY);
 		this.tile = tile;
 		currentState = defaultState;
@@ -54,7 +54,7 @@ public class ModuleToggleSwitch extends ModuleButton {
 	@SideOnly(Side.CLIENT)
 	public List<GuiButton> addButtons(int x, int y) {
 
-		List<GuiButton> list = new LinkedList<GuiButton>();
+		List<GuiButton> list = new LinkedList<>();
 
 		enabledButton = new GuiToggleButtonImage(0, x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 		enabledButton.setState(currentState);

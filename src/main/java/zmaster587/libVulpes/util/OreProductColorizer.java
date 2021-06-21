@@ -11,9 +11,11 @@ import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.block.BlockOre;
 import zmaster587.libVulpes.items.ItemOreProduct;
 
+import javax.annotation.Nonnull;
+
 public class OreProductColorizer   implements IItemColor, IBlockColor  {
 	@Override
-	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+	public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex) {
 		if(stack.getItem() instanceof ItemOreProduct)
 			return ((ItemOreProduct)stack.getItem()).properties.get(stack.getMetadata()).getColor();
 		else 
@@ -35,7 +37,7 @@ public class OreProductColorizer   implements IItemColor, IBlockColor  {
 	}
 
 	/*@Override
-	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+	public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex) {
 		return ((BlockOre)Block.getBlockFromItem(stack.getItem())).ores[stack.getMetadata()].getColor();
 	}*/
 }

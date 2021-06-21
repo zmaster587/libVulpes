@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.libVulpes.api.material.Material;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -28,7 +29,7 @@ public class ItemOreProduct extends Item {
 		setHasSubtypes(true);
 		setMaxDamage(0);
 		this.outputType = outputType;
-		properties = new HashMap<Integer, Material>();
+		properties = new HashMap<>();
 	}
 
 	public void registerItem(int meta, Material ore) {
@@ -55,7 +56,8 @@ public class ItemOreProduct extends Item {
 
 
 	@Override
-	public String getItemStackDisplayName(ItemStack itemstack) {
+	@Nonnull
+	public String getItemStackDisplayName(@Nonnull ItemStack itemstack) {
 
 		//Attempt to get a specific name first, then fall back
 		try {

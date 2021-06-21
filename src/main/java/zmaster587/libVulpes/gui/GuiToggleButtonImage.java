@@ -64,10 +64,10 @@ public class GuiToggleButtonImage extends GuiButton {
 	        Tessellator tessellator = Tessellator.getInstance();
 	        BufferBuilder vertexbuffer = tessellator.getBuffer();
 	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-	        vertexbuffer.pos(x, y + height, (double)this.zLevel).tex(0, 1).endVertex();
-	        vertexbuffer.pos(x + width, y + height, (double)this.zLevel).tex( 1, 1).endVertex();
-	        vertexbuffer.pos(x + width, y, (double)this.zLevel).tex(1, 0).endVertex();
-	        vertexbuffer.pos(x, y, (double)this.zLevel).tex(0, 0).endVertex();
+	        vertexbuffer.pos(x, y + height, this.zLevel).tex(0, 1).endVertex();
+	        vertexbuffer.pos(x + width, y + height, this.zLevel).tex( 1, 1).endVertex();
+	        vertexbuffer.pos(x + width, y, this.zLevel).tex(1, 0).endVertex();
+	        vertexbuffer.pos(x, y, this.zLevel).tex(0, 0).endVertex();
 	        tessellator.draw();
 			
 			this.mouseDragged(minecraft, par2, par3);

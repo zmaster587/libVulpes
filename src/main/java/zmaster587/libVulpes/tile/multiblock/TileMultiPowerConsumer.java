@@ -28,6 +28,7 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	protected boolean enabled;
 	protected ModuleToggleSwitch toggleSwitch;
 	//On server determines change in power state, on client determines last power state on server
-	boolean hadPowerLastTick = true;
+	boolean hadPowerLastTick;
 
 	Object soundToPlay;
 
@@ -101,11 +102,11 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	/**
 	 * 
-	 * @param block
+	 * @param state
 	 * @param tile can be null
 	 * @return
 	 */
-	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
+	public float getTimeMultiplierForBlock(IBlockState state, @Nullable TileEntity tile) {
 
 		ItemStack droppedItem = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 
@@ -139,7 +140,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	@Override
 	public void update() {
 
-		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
+		//Freaky janky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0) {
 			if(!world.isRemote) {
 				if(isComplete())
@@ -147,7 +148,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			}
 			else {
 				SoundEvent str;
-				if(world.isRemote && (str = getSound()) != null) {
+				if((str = getSound()) != null) {
 					playMachineSound(str);
 				}
 			}
@@ -243,9 +244,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	/**
 	 * @param world world
-	 * @param destroyedX x coord of destroyed block
-	 * @param destroyedY y coord of destroyed block
-	 * @param destroyedZ z coord of destroyed block
+	 * @param destroyedPos coords of destroyed block
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
 	@Override
@@ -361,7 +360,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 		modules.add(new ModuleText(140, 40, String.format("Speed:\n%.2fx", 1/getTimeMultiplier()), 0x2d2d2d));

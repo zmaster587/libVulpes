@@ -2,7 +2,6 @@ package zmaster587.libVulpes.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -28,9 +27,8 @@ public class BlockOre extends Block implements INamedMetaBlock {
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        IBlockState iblockstate = this.getDefaultState().withProperty(VARIANT, meta);
 
-        return iblockstate;
+		return this.getDefaultState().withProperty(VARIANT, meta);
     }
     
     @Override
@@ -41,7 +39,7 @@ public class BlockOre extends Block implements INamedMetaBlock {
     @Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {VARIANT});
+        return new BlockStateContainer(this, VARIANT);
     }
     
 	public AllowedProducts getProduct() {

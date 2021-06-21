@@ -7,5 +7,5 @@ public interface ISliderBar extends IProgressBar {
 	 * @param id id of the progress bar to update
 	 * @param progress progress data received from the server
 	 */
-	public void setProgressByUser(int id, int progress);
+	void setProgressByUser(int id, int progress);
 }

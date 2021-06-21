@@ -18,16 +18,16 @@ import java.io.IOException;
 
 public class PacketItemModifcation extends BasePacket {
 
-	NBTTagCompound nbt;
+	private NBTTagCompound nbt;
 
-	byte packetId;
-	int entityId;
-	EntityPlayer entity;
-	INetworkItem machine;
+	private byte packetId;
+	private int entityId;
+	private EntityPlayer entity;
+	private INetworkItem machine;
 
 	public PacketItemModifcation() {
 		nbt = new NBTTagCompound();
-	};
+	}
 
 	public PacketItemModifcation(INetworkItem machine, EntityPlayer entity, byte packetId) {
 		this();
@@ -100,9 +100,9 @@ public class PacketItemModifcation extends BasePacket {
 			this.nbt = nbt;
 		}
 
-		if(ent != null && ent instanceof EntityPlayer) {
+		if(ent instanceof EntityPlayer) {
 			ItemStack itemStack = ((EntityPlayer)ent).getHeldItem(EnumHand.MAIN_HAND);
-			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
+			if(!itemStack.isEmpty() && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).readDataFromNetwork(in, packetId, nbt, itemStack);
 			}
 		}
@@ -115,7 +115,7 @@ public class PacketItemModifcation extends BasePacket {
 
 		if(player != null) {
 			ItemStack itemStack = player.getHeldItem(EnumHand.MAIN_HAND);
-			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
+			if(!itemStack.isEmpty() && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).useNetworkData(player, side, packetId, nbt, itemStack);
 			}
 		}
@@ -126,12 +126,12 @@ public class PacketItemModifcation extends BasePacket {
 
 	@Override
 	public void executeServer(EntityPlayerMP player) {
-		execute((EntityPlayer)player, Side.SERVER);
+		execute(player, Side.SERVER);
 	}
 
 	@Override
 	public void executeClient(EntityPlayer player) {
-		execute((EntityPlayer)player, Side.CLIENT);
+		execute(player, Side.CLIENT);
 	}
 
 	@Override
@@ -162,9 +162,9 @@ public class PacketItemModifcation extends BasePacket {
 			this.nbt = nbt;
 		}
 
-		if(ent != null && ent instanceof EntityPlayer) {
+		if(ent instanceof EntityPlayer) {
 			ItemStack itemStack = ((EntityPlayer)ent).getHeldItem(EnumHand.MAIN_HAND);
-			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
+			if(!itemStack.isEmpty() && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).readDataFromNetwork(in, packetId, nbt, itemStack);
 			}
 		}

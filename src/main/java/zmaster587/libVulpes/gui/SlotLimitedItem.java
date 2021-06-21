@@ -4,6 +4,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class SlotLimitedItem extends Slot {
 	
 	IInventory tile;
@@ -14,7 +16,7 @@ public class SlotLimitedItem extends Slot {
 	}
 	
 	@Override
-	public boolean isItemValid(ItemStack stack)
+	public boolean isItemValid(@Nonnull ItemStack stack)
 	{
 		return tile.isItemValidForSlot(this.slotNumber, stack);
 	}

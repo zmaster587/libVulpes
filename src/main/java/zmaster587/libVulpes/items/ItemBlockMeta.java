@@ -4,6 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class ItemBlockMeta extends  ItemBlock {
 
 	public ItemBlockMeta(Block p_i45326_1_) {
@@ -13,7 +15,7 @@ public class ItemBlockMeta extends  ItemBlock {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
+	public String getUnlocalizedName(@Nonnull ItemStack stack) {
 		return super.getUnlocalizedName(stack) + "." + stack.getItemDamage();
 	}
 	

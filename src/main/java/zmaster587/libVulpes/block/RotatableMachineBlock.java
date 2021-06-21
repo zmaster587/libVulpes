@@ -2,7 +2,6 @@ package zmaster587.libVulpes.block;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -21,6 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
@@ -50,12 +50,12 @@ public class RotatableMachineBlock extends RotatableBlock {
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{FACING, STATE});
+		return new BlockStateContainer(this, FACING, STATE);
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		super.addInformation(stack, player, tooltip, advanced);
 		tooltip.add(ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.multiblock"));
 	}
@@ -75,7 +75,7 @@ public class RotatableMachineBlock extends RotatableBlock {
 			{
 				ItemStack itemstack = tileentitychest.getStackInSlot(j1);
 
-				if (itemstack != null)
+				if (!itemstack.isEmpty())
 				{
 					float f = this.random.nextFloat() * 0.8F + 0.1F;
 					float f1 = this.random.nextFloat() * 0.8F + 0.1F;
@@ -92,15 +92,16 @@ public class RotatableMachineBlock extends RotatableBlock {
 
 						itemstack.setCount(itemstack.getCount() - k1);
 
-						entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
+						entityitem = new EntityItem(world, (float)pos.getX() + f, (float)pos.getY() + f1, (float)pos.getZ() + f2, new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
 						float f3 = 0.05F;
-						entityitem.motionX = (double)((float)this.random.nextGaussian() * f3);
-						entityitem.motionY = (double)((float)this.random.nextGaussian() * f3 + 0.2F);
-						entityitem.motionZ = (double)((float)this.random.nextGaussian() * f3);
+						entityitem.motionX = (float)this.random.nextGaussian() * f3;
+						entityitem.motionY = (float)this.random.nextGaussian() * f3 + 0.2F;
+						entityitem.motionZ = (float)this.random.nextGaussian() * f3;
 
 						if (itemstack.hasTagCompound())
 						{
-							entityitem.getItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+							NBTTagCompound tag = itemstack.getTagCompound();
+							entityitem.getItem().setTagCompound(tag == null ? null : tag.copy());
 						}
 					}
 				}
@@ -114,7 +115,7 @@ public class RotatableMachineBlock extends RotatableBlock {
 	public boolean onBlockActivated(World worldIn, BlockPos pos,
 			IBlockState state, EntityPlayer playerIn, EnumHand hand,
 			EnumFacing facing, float hitX, float hitY, float hitZ) {
-		//Handlue gui through modular system
+		//Handle gui through modular system
 		if(!worldIn.isRemote )
 			playerIn.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 

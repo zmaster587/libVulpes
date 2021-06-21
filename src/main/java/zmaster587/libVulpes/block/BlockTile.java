@@ -1,7 +1,6 @@
 package zmaster587.libVulpes.block;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -42,7 +41,7 @@ public class BlockTile extends RotatableBlock {
 
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {FACING, STATE});
+        return new BlockStateContainer(this, FACING, STATE);
     }
 	
     @Override
@@ -55,7 +54,7 @@ public class BlockTile extends RotatableBlock {
      * Convert the BlockState into the correct metadata value
      */
     public int getMetaFromState(IBlockState state) {
-    	return state.getValue(FACING).getIndex() | (state.getValue(STATE).booleanValue() ? 8 : 0);
+    	return state.getValue(FACING).getIndex() | (state.getValue(STATE) ? 8 : 0);
     }
     
 	public void setBlockState(World world, IBlockState state, BlockPos pos, boolean newState) {
@@ -135,15 +134,16 @@ public class BlockTile extends RotatableBlock {
 						Item oldItem = itemstack.getItem();
 						ItemStack oldStack = itemstack.copy();
 						itemstack.setCount(itemstack.getCount() - j1);
-						entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(oldItem, j1, itemstack.getItemDamage()));
+						entityitem = new EntityItem(world, (float)pos.getX() + f, (float)pos.getY() + f1, (float)pos.getZ() + f2, new ItemStack(oldItem, j1, itemstack.getItemDamage()));
 						float f3 = 0.05F;
-						entityitem.motionX = (double)((float)world.rand.nextGaussian() * f3);
-						entityitem.motionY = (double)((float)world.rand.nextGaussian() * f3 + 0.2F);
-						entityitem.motionZ = (double)((float)world.rand.nextGaussian() * f3);
+						entityitem.motionX = (float)world.rand.nextGaussian() * f3;
+						entityitem.motionY = (float)world.rand.nextGaussian() * f3 + 0.2F;
+						entityitem.motionZ = (float)world.rand.nextGaussian() * f3;
 
 						if (oldStack.hasTagCompound())
 						{
-							entityitem.getItem().setTagCompound((NBTTagCompound)oldStack.getTagCompound().copy());
+							NBTTagCompound tag = oldStack.getTagCompound();
+							entityitem.getItem().setTagCompound(tag == null ? null : tag.copy());
 						}
 						world.spawnEntity(entityitem);
 					}

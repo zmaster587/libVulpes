@@ -4,6 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 public class SlotListAllowed extends Slot {
@@ -16,10 +17,10 @@ public class SlotListAllowed extends Slot {
 	}
 	
 	@Override
-	public boolean isItemValid(ItemStack stack)
+	public boolean isItemValid(@Nonnull ItemStack stack)
 	{
-		for(ItemStack i : allowedItems){
-			if(i.isItemEqual(stack))
+		for(ItemStack itemStack : allowedItems){
+			if(itemStack.isItemEqual(stack))
 				return true;
 		}
 		return false;

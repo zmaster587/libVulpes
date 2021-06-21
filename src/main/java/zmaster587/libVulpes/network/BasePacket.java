@@ -25,7 +25,7 @@ public abstract class BasePacket implements IMessage {
 	}
 
 	public static BasePacket constructPacket(int packetId) throws ProtocolException, InstantiationException, IllegalAccessException {
-		Class<? extends BasePacket> clazz = idMap.get(Integer.valueOf(packetId));
+		Class<? extends BasePacket> clazz = idMap.get(packetId);
 		if(clazz == null){
 			throw new ProtocolException("Protocol Exception!  Unknown Packet Id!");
 		} else {
@@ -56,7 +56,7 @@ public abstract class BasePacket implements IMessage {
 
 	public final int getPacketId() {
 		if(idMap.inverse().containsKey(getClass())) {
-			return idMap.inverse().get(getClass()).intValue();
+			return idMap.inverse().get(getClass());
 		} else {
 			throw new RuntimeException("Packet " + getClass().getSimpleName() + " is a missing mapping!");
 		}
@@ -101,7 +101,7 @@ public abstract class BasePacket implements IMessage {
 			return null;
 		}
 
-		public class executor implements Runnable {
+		public static class executor implements Runnable {
 
 			final Side side;
 			final BasePacket packet;
@@ -135,7 +135,7 @@ public abstract class BasePacket implements IMessage {
 			return null;
 		}
 
-		public class executor implements Runnable {
+		public static class executor implements Runnable {
 
 			final Side side;
 			final BasePacket packet;

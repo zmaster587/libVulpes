@@ -6,6 +6,6 @@ public class PacketID {
 	ArrayList<Byte> idNum;
 	
 	public PacketID() {
-		idNum = new ArrayList<Byte>();
+		idNum = new ArrayList<>();
 	}
 }

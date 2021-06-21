@@ -8,7 +8,7 @@ public class MultiBattery implements IUniversalEnergy {
 
 	//Note: as of writing there should never be a need to save this
 	
-	protected LinkedList<IUniversalEnergy> batteries = new LinkedList<IUniversalEnergy>();
+	protected LinkedList<IUniversalEnergy> batteries = new LinkedList<>();
 	
 	public void addBattery(IUniversalEnergy battery) {
 		batteries.add(battery);

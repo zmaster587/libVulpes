@@ -17,8 +17,10 @@ import net.minecraft.world.World;
 import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.ParametersAreNullableByDefault;
 
 public class BlockPhantom extends Block {
 
@@ -44,31 +46,35 @@ public class BlockPhantom extends Block {
 	
 	
 	@Override
+	@ParametersAreNullableByDefault
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileSchematic();
 	}
 	
 	@Override
+	@Nonnull
+	@ParametersAreNonnullByDefault
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
 			World world, BlockPos pos, EntityPlayer player) {
 		TileEntity tile = world.getTileEntity(pos);
 		
-		if(tile != null && tile instanceof TilePlaceholder && ((TilePlaceholder)tile).getReplacedState() != null) {
+		if(tile instanceof TilePlaceholder && ((TilePlaceholder) tile).getReplacedState() != null) {
 			Block block = ((TilePlaceholder)tile).getReplacedState().getBlock();
-			ItemStack stack = ((TilePlaceholder)tile).getReplacedState().getBlock().getPickBlock(((TilePlaceholder)tile).getReplacedState(), target, world, pos, player);
-			
-			
-			return stack;
+
+
+			return ((TilePlaceholder)tile).getReplacedState().getBlock().getPickBlock(((TilePlaceholder)tile).getReplacedState(), target, world, pos, player);
 		}
 		return super.getPickBlock(state, target, world, pos, player);
 	}
 
 	@Override
+	@Nonnull
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 	
 	@Override
+	@ParametersAreNullableByDefault
 	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
 	}
@@ -80,7 +86,7 @@ public class BlockPhantom extends Block {
 	
 
 	@Override
-	public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
+	public boolean isReplaceable(IBlockAccess worldIn, @Nullable BlockPos pos) {
 		return true;
 	}
 	

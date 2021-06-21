@@ -14,8 +14,7 @@ import net.minecraft.world.World;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockStructure;
 import zmaster587.libVulpes.tile.TileMaterial;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nonnull;
 
 public class BlockMaterial extends BlockMultiblockStructure {
 
@@ -28,8 +27,9 @@ public class BlockMaterial extends BlockMultiblockStructure {
 	}
 
 	@Override
-	 public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
-     {
+	@Nonnull
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
+	{
 		TileEntity tile = world.getTileEntity(pos);
 		int meta = 0;
 		if(tile instanceof TileMaterial) {

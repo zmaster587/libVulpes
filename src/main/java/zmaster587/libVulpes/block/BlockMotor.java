@@ -11,6 +11,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.api.ITimeModifier;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class BlockMotor extends RotatableBlock implements ITimeModifier {
@@ -33,14 +34,15 @@ public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	}
 	 
 	 @Override
-	public void addInformation(ItemStack stack, World player,
-			List<String> tooltip, ITooltipFlag advanced) {
+	public void addInformation(@Nonnull ItemStack stack, World player,
+							   List<String> tooltip, ITooltipFlag advanced) {
 		super.addInformation(stack, player, tooltip, advanced);
 		
 		tooltip.add(String.format(ChatFormatting.GRAY + "Machine Speed: %.2f", 1/getTimeMult()));
 	}
 	
 	@Override
+	@Nonnull
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
 			World world, BlockPos pos, EntityPlayer player) {
 		return super.getPickBlock(state.getBlock().getDefaultState(), target, world, pos, player);

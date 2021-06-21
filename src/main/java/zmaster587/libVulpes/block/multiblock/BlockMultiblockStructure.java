@@ -2,7 +2,6 @@ package zmaster587.libVulpes.block.multiblock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -29,7 +28,7 @@ public class BlockMultiblockStructure extends Block {
 	
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {VARIANT});
+        return new BlockStateContainer(this, VARIANT);
     }
 	
     @Override
@@ -45,10 +44,8 @@ public class BlockMultiblockStructure extends Block {
 	/**
 	 * Turns the block invisible or in the case of BlockMultiBlockComponentVisible makes it create a tileEntity
 	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param meta
+	 * @param pos
+	 * @param state
 	 */
 	public void hideBlock(World world, BlockPos pos, IBlockState state) {
 		world.setBlockState(pos, state.withProperty(VARIANT, state.getValue(VARIANT) | 8));

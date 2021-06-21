@@ -4,6 +4,8 @@ import cofh.api.energy.IEnergyHandler;
 import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import javax.annotation.Nullable;
+
 public class TilePlugInputRF extends TilePlugBase implements IEnergyHandler {
 
 	UniversalBattery storage;
@@ -45,6 +47,7 @@ public class TilePlugInputRF extends TilePlugBase implements IEnergyHandler {
 	}
 	
 	@Override
+	@Nullable
 	public String getInventoryName() {
 		return null;
 	}

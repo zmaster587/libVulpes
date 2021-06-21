@@ -1,23 +1,22 @@
 package zmaster587.libVulpes.interfaces;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 public interface IRecipe {
-	public List<ItemStack> getOutput();
+	List<ItemStack> getOutput();
 	
-	public List<FluidStack> getFluidOutputs();
+	List<FluidStack> getFluidOutputs();
 	
-	public List<List<ItemStack>> getIngredients();
+	List<List<ItemStack>> getIngredients();
 	
-	public List<FluidStack> getFluidIngredients();
+	List<FluidStack> getFluidIngredients();
 	
-	public int getTime();
+	int getTime();
 	
-	public int getPower();
+	int getPower();
 	
-	public String getOreDictString(int slot);
+	String getOreDictString(int slot);
 }

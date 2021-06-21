@@ -11,6 +11,8 @@ import net.minecraft.world.World;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 
+import javax.annotation.Nonnull;
+
 public class TilePointer extends TileEntity implements IMultiblock, ILinkableTile {
 	BlockPos masterBlockPos;
 
@@ -32,7 +34,7 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 		return oldState.getBlock() != newState.getBlock();
 	}
 
-	public boolean onLinkStart(ItemStack item, TileEntity entity, EntityPlayer player, World world) {
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 		if(hasMaster()) {
 			TileEntity master = this.getMasterBlock();
 			if(master instanceof ILinkableTile) {
@@ -41,7 +43,7 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 		}
 		return false;
 	}
-	public boolean onLinkComplete(ItemStack item, TileEntity entity, EntityPlayer player, World world) {
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 		if(hasMaster()) {
 			TileEntity master = this.getMasterBlock();
 			if(master instanceof ILinkableTile) {

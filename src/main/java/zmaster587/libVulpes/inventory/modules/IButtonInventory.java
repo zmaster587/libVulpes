@@ -10,6 +10,6 @@ public interface IButtonInventory {
 	 * @param buttonId id of the button pressed
 	 */
 	@SideOnly(Side.CLIENT)
-	public void onInventoryButtonPressed(int buttonId);
+	void onInventoryButtonPressed(int buttonId);
 	
 }

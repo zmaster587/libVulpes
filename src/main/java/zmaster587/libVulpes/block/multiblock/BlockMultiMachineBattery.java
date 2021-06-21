@@ -9,6 +9,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.tile.energy.TilePlugBase;
 
 public class BlockMultiMachineBattery extends BlockMultiblockStructure {
@@ -49,5 +50,20 @@ public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state)
+	{
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity tile = worldIn.getTileEntity(pos);
+		if (tile instanceof IComparatorOverride) {
+			return ((IComparatorOverride) tile).getComparatorOverride();
+		}
+		return 0;
 	}
 }

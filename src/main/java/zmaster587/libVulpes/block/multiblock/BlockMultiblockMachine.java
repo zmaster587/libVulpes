@@ -18,6 +18,7 @@ import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -47,7 +48,7 @@ public class BlockMultiblockMachine extends BlockTile {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		super.addInformation(stack, player, tooltip, advanced);
 		tooltip.add(ChatFormatting.DARK_GRAY + "" + ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.multiblock"));
 	}

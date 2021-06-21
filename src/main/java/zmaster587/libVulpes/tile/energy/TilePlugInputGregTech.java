@@ -7,6 +7,8 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import zmaster587.libVulpes.compat.GTEnergyCapability;
 
+import javax.annotation.Nullable;
+
 public class TilePlugInputGregTech extends TileForgePowerOutput {
 
 	public TilePlugInputGregTech() {
@@ -19,6 +21,7 @@ public class TilePlugInputGregTech extends TileForgePowerOutput {
 	}
 
 	@Override
+	@Nullable
 	public String getName() {
 		return null;
 	}
@@ -61,7 +64,8 @@ public class TilePlugInputGregTech extends TileForgePowerOutput {
 
 				if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
 					IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
-					this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
+					if(storage != null)
+						this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
 				}
 			}
 		}

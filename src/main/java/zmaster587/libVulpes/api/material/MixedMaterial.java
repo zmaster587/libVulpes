@@ -5,9 +5,9 @@ import net.minecraft.item.ItemStack;
 //TODO: needs work
 public class MixedMaterial {
 	
-	ItemStack[] product;
-	Object input;
-	Class process;
+	private ItemStack[] product;
+	private Object input;
+	private Class process;
 	
 	public MixedMaterial(Class process, Object input, ItemStack[] product) {
 		this.product = product;

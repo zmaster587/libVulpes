@@ -50,7 +50,7 @@ public class ModulePower extends ModuleBase {
 		int relativeY = mouseY - offsetY;
 
 		if( relativeX > 0 && relativeX < barXSize && relativeY > 0 && relativeY < barYSize) {
-			List<String> list = new LinkedList<String>();
+			List<String> list = new LinkedList<>();
 			list.add(tile.getUniversalEnergyStored() + " / " + tile.getMaxEnergyStored() + " Power");
 
 			this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);

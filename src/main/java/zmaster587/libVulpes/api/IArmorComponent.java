@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.client.ResourceIcon;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface IArmorComponent {
@@ -25,33 +26,32 @@ public interface IArmorComponent {
 	 * @param modules Inventory of the armorStack containing all modules inlcuding the current one
 	 * @param componentStack the ItemStack representing the current component being ticked
 	 */
-	public void onTick(World world, EntityPlayer player, ItemStack armorStack, IInventory modules, ItemStack componentStack);
+	void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack, IInventory modules, @Nonnull ItemStack componentStack);
 	
 	/**
 	 * Called right before adding a component to the armor
 	 * @param world
-	 * @param player
-	 * @param itemStack the armor itemStack to add the component to
+	 * @param armorStack the armor itemStack to add the component to
 	 * @return true if it should be added false otherwise
 	 */
-	public boolean onComponentAdded(World world, ItemStack armorStack);
+	boolean onComponentAdded(World world, @Nonnull ItemStack armorStack);
 	
-	public void onComponentRemoved(World world, ItemStack armorStack);
+	void onComponentRemoved(World world, @Nonnull ItemStack armorStack);
 	
-	public void onArmorDamaged(EntityLivingBase entity, ItemStack armorStack, ItemStack componentStack, DamageSource source, int damage);
+	void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack, @Nonnull ItemStack componentStack, DamageSource source, int damage);
 	
-	public boolean isAllowedInSlot(ItemStack componentStack, EntityEquipmentSlot armorType);
+	boolean isAllowedInSlot(@Nonnull ItemStack componentStack, EntityEquipmentSlot armorType);
 
 	@SideOnly(Side.CLIENT)
-	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
-			RenderGameOverlayEvent event, Gui gui);
+	void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules,
+					  RenderGameOverlayEvent event, Gui gui);
 	
 	/**
 	 * @param armorStack
-	 * @return The Icon for the HUD, null renders standard item
+	 * @return The Icon for the HUD, ItemStack.EMPTY renders standard item
 	 */
 	@SideOnly(Side.CLIENT)
-	public ResourceIcon getComponentIcon(ItemStack armorStack);
+	ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack);
 
 
 }

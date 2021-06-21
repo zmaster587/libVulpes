@@ -37,7 +37,7 @@ public class PacketHandler {
 	
 	private static Class<?> defaultChannelPipeline;
 	private static int discriminatorNumber = 0;
-	static Codec codec = new Codec();
+	private static Codec codec = new Codec();
 	public static EnumMap<Side, FMLEmbeddedChannel> channels; //= NetworkRegistry.INSTANCE.newChannel("libVulpes", codec);
 	
 	public static PacketHandler INSTANCE = new PacketHandler();
@@ -53,7 +53,7 @@ public class PacketHandler {
 	}
 	
     private static Method generateName;
-    {
+    static {
         try
         {
             defaultChannelPipeline = Class.forName("io.netty.channel.DefaultChannelPipeline");
@@ -112,7 +112,7 @@ public class PacketHandler {
 
     private <REPLY extends IMessage, REQ extends IMessage> SimpleChannelHandlerWrapper<REQ, REPLY> getHandlerWrapper(IMessageHandler<? super REQ, ? extends REPLY> messageHandler, Side side, Class<REQ> requestType)
     {
-        return new SimpleChannelHandlerWrapper<REQ, REPLY>(messageHandler, side, requestType);
+        return new SimpleChannelHandlerWrapper<>(messageHandler, side, requestType);
     }
     
     private String generateName(ChannelPipeline pipeline, ChannelHandler handler)
@@ -178,7 +178,7 @@ public class PacketHandler {
 
 		@Override
 		public void encodeInto(ChannelHandlerContext ctx, BasePacket msg,
-				ByteBuf data) throws Exception {
+				ByteBuf data) {
 			msg.write(data);
 		}
 
@@ -207,7 +207,7 @@ public class PacketHandler {
 
 		}
 		
-		public class executorServer implements Runnable {
+		public static class executorServer implements Runnable {
 
 			final Side side;
 			final BasePacket packet;
@@ -231,8 +231,7 @@ public class PacketHandler {
 	private static final class HandlerClient extends SimpleChannelInboundHandler<BasePacket>
 	{
 		@Override
-		protected void channelRead0(ChannelHandlerContext ctx, BasePacket packet) throws Exception
-		{
+		protected void channelRead0(ChannelHandlerContext ctx, BasePacket packet) {
 			Minecraft mc = Minecraft.getMinecraft();
 			packet.executeClient(mc.player); //actionClient(mc.theWorld, );
 		}
@@ -241,8 +240,7 @@ public class PacketHandler {
 	private static final class HandlerServer extends SimpleChannelInboundHandler<BasePacket>
 	{
 		@Override
-		protected void channelRead0(ChannelHandlerContext ctx, BasePacket packet) throws Exception
-		{
+		protected void channelRead0(ChannelHandlerContext ctx, BasePacket packet) {
 			if (FMLCommonHandler.instance().getEffectiveSide().isClient())
 			{
 				// nothing on the client thread

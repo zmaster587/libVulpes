@@ -14,6 +14,7 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.tile.TileEntityMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class RecipesMachine {
@@ -32,9 +33,9 @@ public class RecipesMachine {
         @Override public ResourceLocation getRegistryName() { return name; }
         @Override public Class<net.minecraft.item.crafting.IRecipe> getRegistryType() { return net.minecraft.item.crafting.IRecipe.class; }
         @Override public boolean matches(InventoryCrafting inv, World worldIn) { return false; } //dirt?
-        @Override public ItemStack getCraftingResult(InventoryCrafting inv) { return result; }
+        @Override @Nonnull public ItemStack getCraftingResult(InventoryCrafting inv) { return result; }
         @Override public boolean canFit(int width, int height) { return false; }
-        @Override public ItemStack getRecipeOutput() { return result; }
+        @Override @Nonnull public ItemStack getRecipeOutput() { return result; }
         @Override public boolean isHidden() { return true; }
     }
 	
@@ -43,7 +44,7 @@ public class RecipesMachine {
     	public ItemStack stack;
     	public float chance;
     	
-    	public ChanceItemStack(ItemStack stack, float chance)
+    	public ChanceItemStack(@Nonnull ItemStack stack, float chance)
     	{
     		this.stack = stack;
     		this.chance = chance;
@@ -75,18 +76,18 @@ public class RecipesMachine {
 		public Recipe() {}
 
 		public Recipe(List<ChanceItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq, Map<Integer, String> oreDict) {
-			this.output = new LinkedList<ChanceItemStack>();
+			this.output = new LinkedList<>();
 			this.output.addAll(output);
 
-			this.input = new LinkedList<List<ItemStack>>();
+			this.input = new LinkedList<>();
 		
 			this.input.addAll(input);
 
 			this.completionTime = completionTime;
 			this.power = powerReq;
 
-			this.fluidInput = new LinkedList<FluidStack>();
-			this.fluidOutput = new LinkedList<ChanceFluidStack>();
+			this.fluidInput = new LinkedList<>();
+			this.fluidOutput = new LinkedList<>();
 			
 			this.inputOreDict = oreDict;
 			
@@ -123,8 +124,8 @@ public class RecipesMachine {
 		
 		@Override
 		public List<FluidStack> getFluidOutputs() {
-			List<FluidStack> stacks = new LinkedList<FluidStack>();
-			fluidOutput.forEach((ChanceFluidStack s) -> { stacks.add(s.stack); });
+			List<FluidStack> stacks = new LinkedList<>();
+			fluidOutput.forEach((ChanceFluidStack s) -> stacks.add(s.stack));
 			return stacks;
 		}
 
@@ -140,7 +141,7 @@ public class RecipesMachine {
 
 		@Override
 		public List<ItemStack> getOutput() {
-			ArrayList<ItemStack> stack = new ArrayList<ItemStack>();
+			ArrayList<ItemStack> stack = new ArrayList<>();
 
 			int maxOutputSize = getRequiredEmptyOutputs();
 			
@@ -224,7 +225,7 @@ public class RecipesMachine {
 	private static RecipesMachine instance = new RecipesMachine();
 
 	public RecipesMachine() {
-		recipeList = new HashMap<Class<? extends TileMultiblockMachine>, List<IRecipe>>();
+		recipeList = new HashMap<>();
 	}
 
 	public static RecipesMachine getInstance() { return instance; }
@@ -236,18 +237,18 @@ public class RecipesMachine {
 	public void addRecipe(Class clazz , Object[] out, int timeRequired, int power, Object ... inputs) {
 		List<IRecipe> recipes = getRecipes(clazz);
 		if(recipes == null) {
-			recipes = new LinkedList<IRecipe>();
+			recipes = new LinkedList<>();
 			recipeList.put(clazz,recipes);
 		}
 
-		Map<Integer, String> oreDict = new HashMap<Integer, String>();
-		LinkedList<List<ItemStack>> stack = new LinkedList<List<ItemStack>>();
+		Map<Integer, String> oreDict = new HashMap<>();
+		LinkedList<List<ItemStack>> stack = new LinkedList<>();
 
-		ArrayList<FluidStack> inputFluidStacks = new ArrayList<FluidStack>();
+		ArrayList<FluidStack> inputFluidStacks = new ArrayList<>();
 
 		try {
 			for(int i = 0; i < inputs.length; i++) {
-				LinkedList<ItemStack> innerList = new LinkedList<ItemStack>();
+				LinkedList<ItemStack> innerList = new LinkedList<>();
 				if(inputs[i] != null) {
 					if(inputs[i] instanceof String) {
 						oreDict.put(i, ((String)inputs[i]));
@@ -266,26 +267,23 @@ public class RecipesMachine {
 					}
 					else if(inputs[i] instanceof FluidStack)
 						inputFluidStacks.add((FluidStack) inputs[i]);
-					else {
-
-						if(inputs[i] instanceof Item) 
-							inputs[i] = new ItemStack((Item)inputs[i]);
-						else if(inputs[i] instanceof Block)
-							inputs[i] = new ItemStack((Block)inputs[i]);
-
+					else if(inputs[i] instanceof Item)
+						inputs[i] = new ItemStack((Item)inputs[i]);
+					else if(inputs[i] instanceof Block)
+						inputs[i] = new ItemStack((Block)inputs[i]);
+					else if(inputs[i] instanceof ItemStack && !((ItemStack) (inputs[i])).isEmpty())
 						innerList.add((ItemStack)inputs[i]);
-					}
 				}
 				if(!innerList.isEmpty())
 				stack.add(innerList);
 			}
-			ArrayList<ChanceItemStack> outputItem = new ArrayList<ChanceItemStack>();
-			ArrayList<ChanceFluidStack> outputFluidStacks = new ArrayList<ChanceFluidStack>();
+			ArrayList<ChanceItemStack> outputItem = new ArrayList<>();
+			ArrayList<ChanceFluidStack> outputFluidStacks = new ArrayList<>();
 
 			for(Object outputObject : out) {
-				if(outputObject instanceof ItemStack)
+				if(outputObject instanceof ItemStack && !((ItemStack) outputObject).isEmpty())
 					outputItem.add(new ChanceItemStack((ItemStack)outputObject, 0f));
-				else
+				else if(outputObject instanceof FluidStack)
 					outputFluidStacks.add(new ChanceFluidStack((FluidStack)outputObject, 0f));
 			}
 
@@ -301,14 +299,14 @@ public class RecipesMachine {
 
 		} catch(ClassCastException e) {
 			//Custom handling to make sure it logs and can be suppressed by user
-			String message = e.getLocalizedMessage();
+			StringBuilder message = new StringBuilder(e.getLocalizedMessage());
 
 			for(StackTraceElement element : e.getStackTrace()) {
-				message += "\n\t" + element.toString();
+				message.append("\n\t").append(element.toString());
 			}
 
 			LibVulpes.logger.warn("Cannot add recipe!");
-			LibVulpes.logger.warn(message);
+			LibVulpes.logger.warn(message.toString());
 
 		}
 	}
@@ -326,10 +324,10 @@ public class RecipesMachine {
 	
 	public void addRecipe(Class clazz , List<Object> out, int timeRequired, int power, List<Object> inputs) {
 		
-		Object outputs[] = new Object[out.size()];
+		Object[] outputs = new Object[out.size()];
 		outputs = out.toArray(outputs);
 		
-		Object inputs2[] = new Object[inputs.size()];
+		Object[] inputs2 = new Object[inputs.size()];
 		inputs2 = inputs.toArray(inputs2);
 		
 		addRecipe(clazz, outputs, timeRequired, power, inputs2);

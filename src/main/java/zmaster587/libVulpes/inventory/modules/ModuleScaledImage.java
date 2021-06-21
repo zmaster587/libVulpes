@@ -74,10 +74,10 @@ public class ModuleScaledImage extends ModuleBase {
 		GlStateManager.color(alpha, alpha, alpha, alpha);
         BufferBuilder buff = Tessellator.getInstance().getBuffer();
         buff.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        buff.pos((double)(x + this.offsetX), (double)(y + this.offsetY + sizeY), (double)0).tex(minX, maxY).endVertex();
-        buff.pos((double)(x + this.offsetX + sizeX), (double)(y + this.offsetY + sizeY), (double)0).tex(maxX, maxY).endVertex();
-        buff.pos((double)(x + this.offsetX + sizeX), (double)(y + this.offsetY), (double)0).tex(maxX, minY).endVertex();
-        buff.pos((double)(x + this.offsetX), (double)(y + this.offsetY), (double)0).tex(minX, minY).endVertex();
+        buff.pos(x + this.offsetX, y + this.offsetY + sizeY, 0).tex(minX, maxY).endVertex();
+        buff.pos(x + this.offsetX + sizeX, y + this.offsetY + sizeY, 0).tex(maxX, maxY).endVertex();
+        buff.pos(x + this.offsetX + sizeX, y + this.offsetY, 0).tex(maxX, minY).endVertex();
+        buff.pos(x + this.offsetX, y + this.offsetY, 0).tex(minX, minY).endVertex();
         Tessellator.getInstance().draw();
         if(alpha < 1f) {
 			GL11.glColor4d(1f, 1f, 1f, 1f);

@@ -7,6 +7,7 @@ import net.minecraft.util.text.translation.I18n;
 import zmaster587.libVulpes.block.BlockOre;
 import zmaster587.libVulpes.block.INamedMetaBlock;
 
+import javax.annotation.Nonnull;
 import java.util.Locale;
 
 public class ItemOre extends ItemBlock {
@@ -17,7 +18,7 @@ public class ItemOre extends ItemBlock {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
+	public String getUnlocalizedName(@Nonnull ItemStack stack) {
 		return ((INamedMetaBlock)this.getBlock()).getUnlocalizedName(stack.getItemDamage());
 	}
 	
@@ -27,7 +28,7 @@ public class ItemOre extends ItemBlock {
 	}
 	
 	@Override
-    public String getItemStackDisplayName(ItemStack stack)
+    public String getItemStackDisplayName(@Nonnull ItemStack stack)
     {
 		String translate = "tile." + this.getUnlocalizedNameInefficiently(stack).substring(9) + "." + ((BlockOre)this.getBlock()).getProduct().name().toLowerCase(Locale.ENGLISH) + ".name";
 		if(I18n.canTranslate(translate))

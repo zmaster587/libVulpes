@@ -25,7 +25,7 @@ public class PacketEntity extends BasePacket {
 
 	public PacketEntity() {
 		nbt = new NBTTagCompound();
-	};
+	}
 
 	public PacketEntity(INetworkEntity machine, byte packetId) {
 		this();
@@ -88,7 +88,7 @@ public class PacketEntity extends BasePacket {
 			this.nbt = nbt;
 		}
 
-		if(ent != null && ent instanceof INetworkEntity) {
+		if(ent instanceof INetworkEntity) {
 			entity = (INetworkEntity)ent;
 			entity.readDataFromNetwork(in, packetId, nbt);
 		}
@@ -104,12 +104,12 @@ public class PacketEntity extends BasePacket {
 
 	@Override
 	public void executeServer(EntityPlayerMP player) {
-		execute((EntityPlayer)player, Side.SERVER);
+		execute(player, Side.SERVER);
 	}
 
 	@Override
 	public void executeClient(EntityPlayer player) {
-		execute((EntityPlayer)player, Side.CLIENT);
+		execute(player, Side.CLIENT);
 		if(entity == null) {
 			
 		}
@@ -144,7 +144,7 @@ public class PacketEntity extends BasePacket {
 			this.nbt = nbt;
 		}
 
-		if(ent != null && ent instanceof INetworkEntity) {
+		if(ent instanceof INetworkEntity) {
 			entity = (INetworkEntity)ent;
 			entity.readDataFromNetwork(buffer, packetId, nbt);
 		}

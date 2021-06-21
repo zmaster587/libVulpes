@@ -5,6 +5,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
+
 public class SlotOreDict extends Slot {
 	
 	String acceptedNames;
@@ -15,7 +17,7 @@ public class SlotOreDict extends Slot {
 	}
 	
 	@Override
-	public boolean isItemValid(ItemStack stack)
+	public boolean isItemValid(@Nonnull ItemStack stack)
 	{
 		int oreId = OreDictionary.getOreID(acceptedNames);
 		if(oreId == -1)

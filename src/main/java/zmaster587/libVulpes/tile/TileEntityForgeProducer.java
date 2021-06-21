@@ -33,7 +33,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModulePower(18, 20, energy));
 
 		return modules;
@@ -53,9 +53,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 
-		if(capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability))
-			return true;
-		return false;
+		return capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability);
 	}
 
 	@Override
@@ -157,7 +155,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 
 			if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
 				IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
-				if(storage.canReceive())
+				if(storage != null && storage.canReceive())
 					this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
 			}
 		}

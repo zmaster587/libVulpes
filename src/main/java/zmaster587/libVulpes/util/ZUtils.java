@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -97,7 +98,7 @@ public class ZUtils {
 
 			if (oclass != null)
 			{
-				tileentity = (TileEntity)oclass.newInstance();
+				tileentity = oclass.newInstance();
 			}
 		}
 		catch (Throwable throwable1)
@@ -123,7 +124,7 @@ public class ZUtils {
 		}
 		else
 		{
-			net.minecraftforge.fml.common.FMLLog.warning("Skipping BlockEntity with id {}", new Object[] {s});
+			net.minecraftforge.fml.common.FMLLog.warning("Skipping BlockEntity with id {}", s);
 		}
 
 		return tileentity;
@@ -155,14 +156,12 @@ public class ZUtils {
 			maxX = buffer;
 		}
 
-		AxisAlignedBB ret = new AxisAlignedBB(minX,
+		return new AxisAlignedBB(minX,
 				axis.minY,
 				minZ,
 				maxX,
 				axis.maxY,
 				maxZ);
-
-		return ret;
 	}
 
 	/**
@@ -225,20 +224,20 @@ public class ZUtils {
 		return false;
 	}
 
-	public static boolean isInvEmpty(IInventory stack) {
+	public static boolean isInvEmpty(IInventory inv) {
 		boolean empty = true;
-		if(stack == null)
+		if(inv == null)
 			return true;
 
-		for(int i = 0; i < stack.getSizeInventory(); i++) {
-			if(!stack.getStackInSlot(i).isEmpty())
+		for(int i = 0; i < inv.getSizeInventory(); i++) {
+			if(!inv.getStackInSlot(i).isEmpty())
 				return false;
 		}
 
 		return true;
 	}
 
-	public static boolean doesInvHaveRoom(ItemStack item, IInventory inv) {
+	public static boolean doesInvHaveRoom(@Nonnull ItemStack item, IInventory inv) {
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
 			if(inv.getStackInSlot(i).isEmpty() || (item.isItemEqual(inv.getStackInSlot(i)) && inv.getStackInSlot(i).getCount() < inv.getInventoryStackLimit()))
@@ -288,7 +287,7 @@ public class ZUtils {
 			int firstEmtpySlot = -1;
 			int slot;
 
-			if(a[i] != null) {
+			if(!a[i].isEmpty()) {
 				for(slot = 0; slot < b.getSizeInventory(); slot++) {
 
 					if(b.getStackInSlot(slot).isEmpty()) {
@@ -320,11 +319,11 @@ public class ZUtils {
 		}
 	}
 
-	public static void mergeInventory(ItemStack a, IInventory b) {
+	public static void mergeInventory(@Nonnull ItemStack a, IInventory b) {
 		int firstEmtpySlot = -1;
 		int slot;
 
-		if(a != null) {
+		if(!a.isEmpty()) {
 			for(slot = 0; slot < b.getSizeInventory(); slot++) {
 
 				if(b.getStackInSlot(slot).isEmpty()) {
@@ -356,10 +355,11 @@ public class ZUtils {
 		}
 	}
 
-	public static ItemStack getFirstItemInInv(ItemStack i[]) {
+	@Nonnull
+	public static ItemStack getFirstItemInInv(@Nonnull ItemStack[] i) {
 		for(ItemStack stack : i)
 			if(!stack.isEmpty()) return stack;
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	public static int getFirstFilledSlotIndex(IInventory inv) {
@@ -401,7 +401,7 @@ public class ZUtils {
 		return dist;
 	}
 
-	public static boolean areOresSameTypeOreDict(ItemStack stack1, ItemStack stack2) {
+	public static boolean areOresSameTypeOreDict(@Nonnull ItemStack stack1, @Nonnull ItemStack stack2) {
 		int[] stack1Id = OreDictionary.getOreIDs(stack1);
 		int[] stack2Id = OreDictionary.getOreIDs(stack2);
 
@@ -415,7 +415,7 @@ public class ZUtils {
 		return false;
 	}
 
-	public static boolean isItemInOreDict(ItemStack stack, String oreDictEntry) {
+	public static boolean isItemInOreDict(@Nonnull ItemStack stack, String oreDictEntry) {
 		List<ItemStack> itemStacks = OreDictionary.getOres(oreDictEntry);
 		for(ItemStack stack1 : itemStacks)
 			if(OreDictionary.itemMatches(stack1, stack, false))
